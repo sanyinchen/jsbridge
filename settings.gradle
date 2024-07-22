@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "js-bridge"
 include ':app'
-include ':jsbridge'
+include ':js-bridge-lib'
