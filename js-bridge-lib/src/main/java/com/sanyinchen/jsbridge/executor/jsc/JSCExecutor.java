@@ -9,7 +9,7 @@ package com.sanyinchen.jsbridge.executor.jsc;
 
 import com.facebook.jni.HybridData;
 import com.facebook.jni.annotations.DoNotStrip;
-import com.sanyinchen.jsbridge.datastructure.ReadableNativeMap;
+import com.sanyinchen.jsbridge.data.ReadableNativeMap;
 import com.sanyinchen.jsbridge.executor.base.JavaScriptExecutor;
 
 @DoNotStrip

@@ -7,7 +7,7 @@
 
 package com.sanyinchen.jsbridge.executor.jsc;
 
-import com.sanyinchen.jsbridge.datastructure.WritableNativeMap;
+import com.sanyinchen.jsbridge.data.WritableNativeMap;
 import com.sanyinchen.jsbridge.executor.base.JavaScriptExecutor;
 import com.sanyinchen.jsbridge.executor.base.JavaScriptExecutorFactory;
 

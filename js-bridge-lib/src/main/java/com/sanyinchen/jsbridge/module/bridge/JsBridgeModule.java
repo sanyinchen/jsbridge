@@ -5,20 +5,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.sanyinchen.jsbridge.modules.common;
+package com.sanyinchen.jsbridge.module.bridge;
 
 
 import com.facebook.jni.annotations.DoNotStrip;
 
 /**
- * A native module whose API can be provided to JS catalyst instances.  {@link INativeModule}s whose
+ * A native module whose API can be provided to JS catalyst instances.  {@link JsBridgeModule}s whose
  * implementation is written in Java should extend {@link BaseJavaModule} or {@link
- * ReactContextBaseJavaModule}.  {@link INativeModule}s whose implementation is written in C++
+ * ReactContextBaseJavaModule}.  {@link JsBridgeModule}s whose implementation is written in C++
  * must not provide any Java code (so they can be reused on other platforms), and instead should
  * register themselves using {@link CxxModuleWrapper}.
  */
 @DoNotStrip
-public interface INativeModule {
+public interface JsBridgeModule {
     interface NativeMethod {
         void invoke(JSInstance jsInstance, ReadableArray parameters);
 

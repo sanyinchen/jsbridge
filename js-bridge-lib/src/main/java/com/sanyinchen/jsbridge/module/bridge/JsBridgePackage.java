@@ -5,11 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.sanyinchen.jsbridge.modules;
+package com.sanyinchen.jsbridge.module.bridge;
 
 import androidx.annotation.NonNull;
-
-import com.sanyinchen.jsbridge.modules.common.INativeModule;
 
 import java.util.List;
 
@@ -33,6 +31,6 @@ public interface JsBridgePackage {
      * @return list of native modules to register with the newly created catalyst instance
      */
     @NonNull
-    List<INativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext);
+    List<JsBridgeModule> createNativeModules(@NonNull ReactApplicationContext reactContext);
 
 }

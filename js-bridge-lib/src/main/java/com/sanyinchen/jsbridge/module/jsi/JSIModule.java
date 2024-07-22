@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.sanyinchen.jsbridge.modules.jsi;
+package com.sanyinchen.jsbridge.module.jsi;
 
 import java.util.List;
 

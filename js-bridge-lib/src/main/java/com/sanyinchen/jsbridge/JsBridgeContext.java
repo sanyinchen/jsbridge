@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Abstract ContextWrapper for Android application or activity {@link Context} and
- * {@link CatalystInstance}
+ * {@link JsBridgeInstance}
  */
 public class JsBridgeContext extends ContextWrapper {
 
@@ -38,7 +38,7 @@ public class JsBridgeContext extends ContextWrapper {
 
 
     private @Nullable
-    CatalystInstance mCatalystInstance;
+    JsBridgeInstance mCatalystInstance;
     private @Nullable
     LayoutInflater mInflater;
     private @Nullable
@@ -60,7 +60,7 @@ public class JsBridgeContext extends ContextWrapper {
     /**
      * Set and initialize CatalystInstance for this Context. This should be called exactly once.
      */
-    public void initializeWithInstance(CatalystInstance catalystInstance) {
+    public void initializeWithInstance(JsBridgeInstance catalystInstance) {
         if (catalystInstance == null) {
             throw new IllegalArgumentException("CatalystInstance cannot be null.");
         }
@@ -138,7 +138,7 @@ public class JsBridgeContext extends ContextWrapper {
         return mCatalystInstance.getNativeModule(nativeModuleInterface);
     }
 
-    public CatalystInstance getCatalystInstance() {
+    public JsBridgeInstance getCatalystInstance() {
         return Assertions.assertNotNull(mCatalystInstance);
     }
 

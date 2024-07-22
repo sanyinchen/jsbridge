@@ -11,7 +11,6 @@ package com.sanyinchen.jsbridge;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Process;
-import android.util.Log;
 
 
 import androidx.annotation.Nullable;
@@ -19,12 +18,14 @@ import androidx.annotation.Nullable;
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.infer.annotation.ThreadConfined;
 import com.facebook.infer.annotation.ThreadSafe;
+import com.facebook.soloader.SoLoader;
 import com.sanyinchen.jsbridge.exception.NativeModuleCallExceptionHandler;
 import com.sanyinchen.jsbridge.executor.base.JavaScriptExecutor;
 import com.sanyinchen.jsbridge.executor.base.JavaScriptExecutorFactory;
 import com.sanyinchen.jsbridge.load.JSBundleLoader;
-import com.sanyinchen.jsbridge.modules.JsBridgePackage;
-import com.sanyinchen.jsbridge.modules.jsi.JSIModule;
+import com.sanyinchen.jsbridge.module.bridge.JsBridgePackage;
+import com.sanyinchen.jsbridge.module.jsi.JSIModulePackage;
+import com.sanyinchen.jsbridge.utils.UiThreadUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,7 +68,7 @@ public class JsBridgeManager {
     private final @Nullable
     NativeModuleCallExceptionHandler mNativeModuleCallExceptionHandler;
     private final @Nullable
-    JSIModule mJSIModulePackage;
+    JSIModulePackage mJSIModulePackage;
 
     /**
      * Listener interface for react instance events.
@@ -111,8 +112,6 @@ public class JsBridgeManager {
             @Nullable String jsMainModulePath,
             List<JsBridgePackage> packages,
             NativeModuleCallExceptionHandler nativeModuleCallExceptionHandler,
-            boolean lazyViewManagersEnabled,
-            int minTimeLeftInFrameForNonBatchedOperationMs,
             @Nullable JSIModulePackage jsiModulePackage) {
         initializeSoLoaderIfNecessary(applicationContext);
 
@@ -122,28 +121,11 @@ public class JsBridgeManager {
         mBundleLoader = bundleLoader;
         mJSMainModulePath = jsMainModulePath;
         mPackages = new ArrayList<>();
-//        Systrace.beginSection(
-//                TRACE_TAG_REACT_JAVA_BRIDGE, "ReactInstanceManager.initDevSupportManager");
-//
-//        Systrace.endSection(TRACE_TAG_REACT_JAVA_BRIDGE);
         mNativeModuleCallExceptionHandler = nativeModuleCallExceptionHandler;
         synchronized (mPackages) {
-//            PrinterHolder.getPrinter()
-//                    .logMessage(ReactDebugOverlayTags.RN_CORE, "RNCore: Use Split Packages");
-//
-            mPackages.add(
-                    new CoreModulesPackage(
-                            this,
-                            lazyViewManagersEnabled,
-                            minTimeLeftInFrameForNonBatchedOperationMs));
-
             mPackages.addAll(packages);
         }
         mJSIModulePackage = jsiModulePackage;
-
-        // Instantiate ReactChoreographer in UI thread.
-        ReactChoreographer.initialize();
-
     }
 
     private static void initializeSoLoaderIfNecessary(Context applicationContext) {
@@ -159,7 +141,6 @@ public class JsBridgeManager {
 
     @ThreadConfined(UI)
     public void createReactContextInBackground() {
-        Log.d(ReactConstants.TAG, "ReactInstanceManager.createReactContextInBackground()");
         Assertions.assertCondition(
                 !mHasStartedCreatingInitialContext,
                 "createReactContextInBackground should only be called when creating the react " +
@@ -172,22 +153,11 @@ public class JsBridgeManager {
 
     @ThreadConfined(UI)
     private void recreateReactContextInBackgroundInner() {
-        Log.d(ReactConstants.TAG, "ReactInstanceManager.recreateReactContextInBackgroundInner()");
-        PrinterHolder.getPrinter()
-                .logMessage(ReactDebugOverlayTags.RN_CORE, "RNCore: recreateReactContextInBackground");
-        UiThreadUtil.assertOnUiThread();
-
-
         recreateReactContextInBackgroundFromBundleLoader();
     }
 
     @ThreadConfined(UI)
     private void recreateReactContextInBackgroundFromBundleLoader() {
-        Log.d(
-                ReactConstants.TAG,
-                "ReactInstanceManager.recreateReactContextInBackgroundFromBundleLoader()");
-        PrinterHolder.getPrinter()
-                .logMessage(ReactDebugOverlayTags.RN_CORE, "RNCore: load from BundleLoader");
         recreateReactContextInBackground(mJavaScriptExecutorFactory, mBundleLoader);
     }
 
@@ -195,9 +165,6 @@ public class JsBridgeManager {
     private void recreateReactContextInBackground(
             JavaScriptExecutorFactory jsExecutorFactory,
             JSBundleLoader jsBundleLoader) {
-        Log.d(ReactConstants.TAG, "ReactInstanceManager.recreateReactContextInBackground()");
-        UiThreadUtil.assertOnUiThread();
-
         final ReactContextInitParams initParams = new ReactContextInitParams(
                 jsExecutorFactory,
                 jsBundleLoader);
@@ -210,17 +177,12 @@ public class JsBridgeManager {
 
     @ThreadConfined(UI)
     private void runCreateReactContextOnNewThread(final ReactContextInitParams initParams) {
-        Log.d(ReactConstants.TAG, "ReactInstanceManager.runCreateReactContextOnNewThread()");
-        UiThreadUtil.assertOnUiThread();
-
-
         mCreateReactContextThread =
                 new Thread(
                         null,
                         new Runnable() {
                             @Override
                             public void run() {
-                                ReactMarker.logMarker(REACT_CONTEXT_THREAD_END);
                                 synchronized (JsBridgeManager.this.mHasStartedDestroying) {
                                     while (JsBridgeManager.this.mHasStartedDestroying) {
                                         try {
@@ -235,14 +197,12 @@ public class JsBridgeManager {
 
                                 try {
                                     Process.setThreadPriority(Process.THREAD_PRIORITY_DISPLAY);
-                                    ReactMarker.logMarker(VM_INIT);
-                                    final ReactApplicationContext reactApplicationContext =
+                                    final JsBridgeContext reactApplicationContext =
                                             createReactContext(
                                                     initParams.getJsExecutorFactory().create(),
                                                     initParams.getJsBundleLoader());
 
                                     mCreateReactContextThread = null;
-                                    ReactMarker.logMarker(PRE_SETUP_REACT_CONTEXT_START);
                                     final Runnable maybeRecreateReactContextRunnable =
                                             new Runnable() {
                                                 @Override
@@ -272,28 +232,19 @@ public class JsBridgeManager {
                                     e.printStackTrace();
                                 }
                             }
-                        },
-                        "create_react_context");
-        ReactMarker.logMarker(REACT_CONTEXT_THREAD_START);
+                        }, "create_react_context");
         mCreateReactContextThread.start();
     }
 
-    private void setupReactContext(final ReactApplicationContext reactContext) {
-        Log.d(ReactConstants.TAG, "ReactInstanceManager.setupReactContext()");
-        ReactMarker.logMarker(PRE_SETUP_REACT_CONTEXT_END);
-        ReactMarker.logMarker(SETUP_REACT_CONTEXT_START);
-        Systrace.beginSection(TRACE_TAG_REACT_JAVA_BRIDGE, "setupReactContext");
+    private void setupReactContext(final JsBridgeContext reactContext) {
         synchronized (mReactContextLock) {
             mCurrentReactContext = Assertions.assertNotNull(reactContext);
         }
 
-        CatalystInstance catalystInstance =
+        JsBridgeInstance catalystInstance =
                 Assertions.assertNotNull(reactContext.getCatalystInstance());
 
         catalystInstance.initialize();
-
-        ReactMarker.logMarker(ATTACH_MEASURED_ROOT_VIEWS_START);
-        ReactMarker.logMarker(ATTACH_MEASURED_ROOT_VIEWS_END);
 
 
         ReactInstanceEventListener[] listeners =
@@ -310,14 +261,11 @@ public class JsBridgeManager {
                         }
                     }
                 });
-        Systrace.endSection(TRACE_TAG_REACT_JAVA_BRIDGE);
-        ReactMarker.logMarker(SETUP_REACT_CONTEXT_END);
         reactContext.runOnJSQueueThread(
                 new Runnable() {
                     @Override
                     public void run() {
                         Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
-                        ReactMarker.logMarker(CHANGE_THREAD_PRIORITY, "js_default");
                     }
                 });
         reactContext.runOnNativeModulesQueueThread(
@@ -330,14 +278,12 @@ public class JsBridgeManager {
     }
 
     /**
-     * @return instance of {@link ReactContext} configured a {@link CatalystInstance} set
+     * @return instance of {@link ReactContext} configured a {@link JsBridgeInstance} set
      */
-    private ReactApplicationContext createReactContext(
+    private JsBridgeContext createReactContext(
             JavaScriptExecutor jsExecutor,
             JSBundleLoader jsBundleLoader) {
-        Log.d(ReactConstants.TAG, "ReactInstanceManager.createReactContext()");
-        ReactMarker.logMarker(CREATE_REACT_CONTEXT_START, jsExecutor.getName());
-        final ReactApplicationContext reactContext = new ReactApplicationContext(mApplicationContext);
+        final JsBridgeContext reactContext = new JsBridgeContext(mApplicationContext);
 
         NativeModuleCallExceptionHandler exceptionHandler = mNativeModuleCallExceptionHandler;
 
@@ -352,28 +298,14 @@ public class JsBridgeManager {
                 .setJSBundleLoader(jsBundleLoader)
                 .setNativeModuleCallExceptionHandler(exceptionHandler);
 
-        ReactMarker.logMarker(CREATE_CATALYST_INSTANCE_START);
-        // CREATE_CATALYST_INSTANCE_END is in JSCExecutor.cpp
-        Systrace.beginSection(TRACE_TAG_REACT_JAVA_BRIDGE, "createCatalystInstance");
-        final CatalystInstance catalystInstance;
-        try {
-            catalystInstance = catalystInstanceBuilder.build();
-        } finally {
-            Systrace.endSection(TRACE_TAG_REACT_JAVA_BRIDGE);
-            ReactMarker.logMarker(CREATE_CATALYST_INSTANCE_END);
-        }
+        final JsBridgeInstance catalystInstance = catalystInstanceBuilder.build();
+
         if (mJSIModulePackage != null) {
             catalystInstance.addJSIModules(mJSIModulePackage
                     .getJSIModules(reactContext, catalystInstance.getJavaScriptContextHolder()));
         }
 
-        if (Systrace.isTracing(TRACE_TAG_REACT_APPS | TRACE_TAG_REACT_JS_VM_CALLS)) {
-            catalystInstance.setGlobalVariable("__RCTProfileIsProfiling", "true");
-        }
-        ReactMarker.logMarker(ReactMarkerConstants.PRE_RUN_JS_BUNDLE_START);
-        Systrace.beginSection(TRACE_TAG_REACT_JAVA_BRIDGE, "runJSBundle");
         catalystInstance.runJSBundle();
-        Systrace.endSection(TRACE_TAG_REACT_JAVA_BRIDGE);
 
         reactContext.initializeWithInstance(catalystInstance);
 
@@ -408,10 +340,6 @@ public class JsBridgeManager {
                 }
             }
         }
-        ReactMarker.logMarker(PROCESS_PACKAGES_END);
-
-        ReactMarker.logMarker(BUILD_NATIVE_MODULE_REGISTRY_START);
-        Systrace.beginSection(TRACE_TAG_REACT_JAVA_BRIDGE, "buildNativeModuleRegistry");
         NativeModuleRegistry nativeModuleRegistry;
         try {
             nativeModuleRegistry = nativeModuleRegistryBuilder.build();
@@ -426,9 +354,7 @@ public class JsBridgeManager {
     private void processPackage(
             ReactPackage reactPackage,
             NativeModuleRegistryBuilder nativeModuleRegistryBuilder) {
-        SystraceMessage.beginSection(TRACE_TAG_REACT_JAVA_BRIDGE, "processPackage")
-                .arg("className", reactPackage.getClass().getSimpleName())
-                .flush();
+
         if (reactPackage instanceof ReactPackageLogger) {
             ((ReactPackageLogger) reactPackage).startProcessPackage();
         }
@@ -437,6 +363,5 @@ public class JsBridgeManager {
         if (reactPackage instanceof ReactPackageLogger) {
             ((ReactPackageLogger) reactPackage).endProcessPackage();
         }
-        SystraceMessage.endSection(TRACE_TAG_REACT_JAVA_BRIDGE).flush();
     }
 }
