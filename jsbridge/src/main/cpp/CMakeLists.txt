@@ -13,7 +13,7 @@
 # limitations under the License.
 
 cmake_minimum_required(VERSION 3.6.0)
-project(fbjni CXX)
+project(js-bridge CXX)
 
 include(GNUInstallDirs)
 
@@ -37,7 +37,7 @@ include_directories(.)
 #启用最高级别的优化选项。这会生成更快的代码，但可能会使编译时间更长。
 #-DNDEBUG:
 #定义 NDEBUG 宏，通常用于禁用调试相关的断言 (assert)。
-set(FBJNI_COMPILE_OPTIONS
+set(COMPILE_OPTIONS
         -Wall
         -std=c++14
         -pthread
@@ -49,16 +49,23 @@ set(FBJNI_COMPILE_OPTIONS
         -DNDEBUG
 )
 
-file(GLOB fbjni_SOURCES
+file(GLOB INCLUDES
+        fbjni/*.h
+        fbjni/detail/*.h
+        lyra/*.h
+        bridge/*.h)
+file(GLOB SOURCES
         fbjni/*.cpp
         fbjni/detail/*.cpp
         lyra/*.cpp
+        bridge/*.cpp
 )
 
-add_library(fbjni SHARED ${fbjni_SOURCES})
+add_library(js-bridge SHARED ${SOURCES})
+target_include_directories(js-bridge INTERFACE ${INCLUDES})
 
-target_compile_options(fbjni PRIVATE ${FBJNI_COMPILE_OPTIONS})
-target_compile_options(fbjni PRIVATE -DBUILDING_FBJNI)
+target_compile_options(js-bridge PRIVATE ${COMPILE_OPTIONS})
+target_compile_options(js-bridge PRIVATE -DBUILDING_FBJNI)
 
-target_link_libraries(fbjni android log)
+target_link_libraries(js-bridge android log)
 

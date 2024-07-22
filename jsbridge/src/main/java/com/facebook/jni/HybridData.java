@@ -30,59 +30,59 @@ import com.facebook.soloader.nativeloader.NativeLoader;
 @DoNotStripAny
 public class HybridData {
 
-  static {
-    NativeLoader.loadLibrary("fbjni");
-  }
-
-  private final Destructor mDestructor = new Destructor(this);
-
-  /**
-   * To explicitly delete the instance, call resetNative(). If the C++ instance is referenced after
-   * this is called, a NullPointerException will be thrown. resetNative() may be called multiple
-   * times safely. Because the {@link DestructorThread} also calls resetNative, the instance will
-   * not leak if this is not called, but timing of deletion and the thread the C++ dtor is called on
-   * will be at the whim of the Java GC. If you want to control the thread and timing of the
-   * destructor, you should call resetNative() explicitly.
-   */
-  public synchronized void resetNative() {
-    mDestructor.destruct();
-  }
-
-  /**
-   * N.B. Thread safety. If you call isValid from a different thread than {@link #resetNative()}
-   * then be sure to do so while synchronizing on the hybrid. For example:
-   *
-   * <pre><code>
-   * synchronized(hybrid) {
-   *   if (hybrid.isValid) {
-   *     // Do stuff.
-   *   }
-   * }
-   * </code></pre>
-   */
-  public boolean isValid() {
-    return mDestructor.mNativePointer != 0;
-  }
-
-  @DoNotStripAny
-  public static class Destructor extends DestructorThread.Destructor {
-
-    // Private C++ instance
-    private volatile long mNativePointer;
-
-    Destructor(Object referent) {
-      super(referent);
+    static {
+        NativeLoader.loadLibrary("js-bridge");
     }
 
-    @Override
-    protected final void destruct() {
-      // When invoked from the DestructorThread instead of resetNative,
-      // the DestructorThread has exclusive ownership of the HybridData
-      // so synchronization is not necessary.
-      deleteNative(mNativePointer);
-      mNativePointer = 0;
+    private final Destructor mDestructor = new Destructor(this);
+
+    /**
+     * To explicitly delete the instance, call resetNative(). If the C++ instance is referenced after
+     * this is called, a NullPointerException will be thrown. resetNative() may be called multiple
+     * times safely. Because the {@link DestructorThread} also calls resetNative, the instance will
+     * not leak if this is not called, but timing of deletion and the thread the C++ dtor is called on
+     * will be at the whim of the Java GC. If you want to control the thread and timing of the
+     * destructor, you should call resetNative() explicitly.
+     */
+    public synchronized void resetNative() {
+        mDestructor.destruct();
     }
 
-    static native void deleteNative(long pointer);
-  }
+    /**
+     * N.B. Thread safety. If you call isValid from a different thread than {@link #resetNative()}
+     * then be sure to do so while synchronizing on the hybrid. For example:
+     *
+     * <pre><code>
+     * synchronized(hybrid) {
+     *   if (hybrid.isValid) {
+     *     // Do stuff.
+     *   }
+     * }
+     * </code></pre>
+     */
+    public boolean isValid() {
+        return mDestructor.mNativePointer != 0;
+    }
+
+    @DoNotStripAny
+    public static class Destructor extends DestructorThread.Destructor {
+
+        // Private C++ instance
+        private volatile long mNativePointer;
+
+        Destructor(Object referent) {
+            super(referent);
+        }
+
+        @Override
+        protected final void destruct() {
+            // When invoked from the DestructorThread instead of resetNative,
+            // the DestructorThread has exclusive ownership of the HybridData
+            // so synchronization is not necessary.
+            deleteNative(mNativePointer);
+            mNativePointer = 0;
+        }
+
+        static native void deleteNative(long pointer);
+    }
 }
