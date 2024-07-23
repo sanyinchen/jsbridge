@@ -19,12 +19,16 @@ import com.facebook.infer.annotation.Assertions;
 import com.facebook.infer.annotation.ThreadConfined;
 import com.facebook.infer.annotation.ThreadSafe;
 import com.facebook.soloader.SoLoader;
+import com.sanyinchen.jsbridge.base.JsBridgeInstance;
 import com.sanyinchen.jsbridge.exception.NativeModuleCallExceptionHandler;
 import com.sanyinchen.jsbridge.executor.base.JavaScriptExecutor;
 import com.sanyinchen.jsbridge.executor.base.JavaScriptExecutorFactory;
 import com.sanyinchen.jsbridge.load.JSBundleLoader;
-import com.sanyinchen.jsbridge.module.bridge.JsBridgePackage;
+import com.sanyinchen.jsbridge.module.bridge.NativeModuleRegistry;
+import com.sanyinchen.jsbridge.module.bridge.NativeModuleRegistryBuilder;
+import com.sanyinchen.jsbridge.module.bridge.NativeModelPackage;
 import com.sanyinchen.jsbridge.module.jsi.JSIModulePackage;
+import com.sanyinchen.jsbridge.queue.ReactQueueConfigurationSpec;
 import com.sanyinchen.jsbridge.utils.UiThreadUtil;
 
 import java.util.ArrayList;
@@ -51,7 +55,7 @@ public class JsBridgeManager {
     JSBundleLoader mBundleLoader;
     private final @Nullable
     String mJSMainModulePath; /* path to JS bundle root on packager server */
-    private final List<JsBridgePackage> mPackages;
+    private final List<NativeModelPackage> mPackages;
     private final Object mReactContextLock = new Object();
     private @Nullable
     volatile JsBridgeContext mCurrentReactContext;
@@ -110,7 +114,7 @@ public class JsBridgeManager {
             JavaScriptExecutorFactory javaScriptExecutorFactory,
             @Nullable JSBundleLoader bundleLoader,
             @Nullable String jsMainModulePath,
-            List<JsBridgePackage> packages,
+            List<NativeModelPackage> packages,
             NativeModuleCallExceptionHandler nativeModuleCallExceptionHandler,
             @Nullable JSIModulePackage jsiModulePackage) {
         initializeSoLoaderIfNecessary(applicationContext);
@@ -291,7 +295,7 @@ public class JsBridgeManager {
 
         NativeModuleRegistry nativeModuleRegistry = processPackages(reactContext, mPackages, false);
 
-        CatalystInstanceImpl.Builder catalystInstanceBuilder = new CatalystInstanceImpl.Builder()
+        JsBridgeInstanceImpl.Builder catalystInstanceBuilder = new JsBridgeInstanceImpl.Builder()
                 .setReactQueueConfigurationSpec(ReactQueueConfigurationSpec.createDefault())
                 .setJSExecutor(jsExecutor)
                 .setRegistry(nativeModuleRegistry)
@@ -314,54 +318,29 @@ public class JsBridgeManager {
     }
 
     private NativeModuleRegistry processPackages(
-            ReactApplicationContext reactContext,
-            List<ReactPackage> packages,
+            JsBridgeContext reactContext,
+            List<NativeModelPackage> packages,
             boolean checkAndUpdatePackageMembership) {
-        NativeModuleRegistryBuilder nativeModuleRegistryBuilder = new NativeModuleRegistryBuilder(
-                reactContext,
-                this);
-
-        ReactMarker.logMarker(PROCESS_PACKAGES_START);
+        NativeModuleRegistryBuilder nativeModuleRegistryBuilder = new NativeModuleRegistryBuilder(reactContext, this);
 
         // TODO(6818138): Solve use-case of native modules overriding
         synchronized (mPackages) {
-            for (ReactPackage reactPackage : packages) {
+            for (NativeModelPackage reactPackage : packages) {
                 if (checkAndUpdatePackageMembership && mPackages.contains(reactPackage)) {
                     continue;
                 }
-                Systrace.beginSection(TRACE_TAG_REACT_JAVA_BRIDGE, "createAndProcessCustomReactPackage");
-                try {
-                    if (checkAndUpdatePackageMembership) {
-                        mPackages.add(reactPackage);
-                    }
-                    processPackage(reactPackage, nativeModuleRegistryBuilder);
-                } finally {
-                    Systrace.endSection(TRACE_TAG_REACT_JAVA_BRIDGE);
+                if (checkAndUpdatePackageMembership) {
+                    mPackages.add(reactPackage);
                 }
+                processPackage(reactPackage, nativeModuleRegistryBuilder);
             }
         }
-        NativeModuleRegistry nativeModuleRegistry;
-        try {
-            nativeModuleRegistry = nativeModuleRegistryBuilder.build();
-        } finally {
-            Systrace.endSection(TRACE_TAG_REACT_JAVA_BRIDGE);
-            ReactMarker.logMarker(BUILD_NATIVE_MODULE_REGISTRY_END);
-        }
-
-        return nativeModuleRegistry;
+        return nativeModuleRegistryBuilder.build();
     }
 
     private void processPackage(
-            ReactPackage reactPackage,
+            NativeModelPackage reactPackage,
             NativeModuleRegistryBuilder nativeModuleRegistryBuilder) {
-
-        if (reactPackage instanceof ReactPackageLogger) {
-            ((ReactPackageLogger) reactPackage).startProcessPackage();
-        }
         nativeModuleRegistryBuilder.processPackage(reactPackage);
-
-        if (reactPackage instanceof ReactPackageLogger) {
-            ((ReactPackageLogger) reactPackage).endProcessPackage();
-        }
     }
 }

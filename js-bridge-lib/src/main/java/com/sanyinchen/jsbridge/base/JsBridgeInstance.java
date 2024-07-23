@@ -5,16 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.sanyinchen.jsbridge;
+package com.sanyinchen.jsbridge.base;
 
 import androidx.annotation.Nullable;
 
 import com.facebook.jni.annotations.DoNotStrip;
-import com.sanyinchen.jsbridge.base.JSInstance;
+import com.sanyinchen.jsbridge.context.JavaScriptContextHolder;
 import com.sanyinchen.jsbridge.data.NativeArray;
 import com.sanyinchen.jsbridge.data.NativeArrayInterface;
 import com.sanyinchen.jsbridge.load.JSBundleLoaderDelegate;
 import com.sanyinchen.jsbridge.memory.MemoryPressureListener;
+import com.sanyinchen.jsbridge.module.bridge.NativeModuleRegistry;
+import com.sanyinchen.jsbridge.module.bridge.NativeModule;
+import com.sanyinchen.jsbridge.module.js.JavaScriptModule;
+import com.sanyinchen.jsbridge.module.jsi.JSIModule;
+import com.sanyinchen.jsbridge.module.jsi.JSIModuleSpec;
+import com.sanyinchen.jsbridge.queue.ReactQueueConfiguration;
 
 import java.util.Collection;
 import java.util.List;
@@ -88,24 +94,10 @@ public interface JsBridgeInstance
      */
     void extendNativeModules(NativeModuleRegistry modules);
 
-    /**
-     * Adds a idle listener for this Catalyst instance. The listener will receive notifications
-     * whenever the bridge transitions from idle to busy and vice-versa, where the busy state is
-     * defined as there being some non-zero number of calls to JS that haven't resolved via a
-     * onBatchCompleted call. The listener should be purely passive and not affect application logic.
-     */
-    void addBridgeIdleDebugListener(NotThreadSafeBridgeIdleDebugListener listener);
-
-    /**
-     * Removes a NotThreadSafeBridgeIdleDebugListener previously added with
-     * {@link #addBridgeIdleDebugListener}
-     */
-    void removeBridgeIdleDebugListener(NotThreadSafeBridgeIdleDebugListener listener);
 
     /** This method registers the file path of an additional JS segment by its ID. */
     void registerSegment(int segmentId, String path);
 
-    @VisibleForTesting
     void setGlobalVariable(String propName, String jsonValue);
 
     /**

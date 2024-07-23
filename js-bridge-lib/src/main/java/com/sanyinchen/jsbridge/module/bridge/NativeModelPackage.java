@@ -9,6 +9,8 @@ package com.sanyinchen.jsbridge.module.bridge;
 
 import androidx.annotation.NonNull;
 
+import com.sanyinchen.jsbridge.JsBridgeContext;
+
 import java.util.List;
 
 /**
@@ -24,13 +26,13 @@ import java.util.List;
  * <p>
  * TODO(6788500, 6788507): Implement support for adding custom views, events and resources
  */
-public interface JsBridgePackage {
+public interface NativeModelPackage {
 
     /**
      * @param reactContext react application context that can be used to create modules
      * @return list of native modules to register with the newly created catalyst instance
      */
     @NonNull
-    List<JsBridgeModule> createNativeModules(@NonNull ReactApplicationContext reactContext);
+    List<NativeModule> createNativeModules(@NonNull JsBridgeContext reactContext);
 
 }

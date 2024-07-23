@@ -14,7 +14,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
+import androidx.annotation.Nullable;
+
 import com.facebook.infer.annotation.Assertions;
+import com.sanyinchen.jsbridge.base.JsBridgeInstance;
+import com.sanyinchen.jsbridge.context.JavaScriptContextHolder;
+import com.sanyinchen.jsbridge.exception.NativeModuleCallExceptionHandler;
+import com.sanyinchen.jsbridge.lifecycle.ActivityEventListener;
+import com.sanyinchen.jsbridge.lifecycle.LifecycleEventListener;
+import com.sanyinchen.jsbridge.lifecycle.LifecycleState;
+import com.sanyinchen.jsbridge.module.bridge.NativeModule;
+import com.sanyinchen.jsbridge.module.js.JavaScriptModule;
+import com.sanyinchen.jsbridge.queue.MessageQueueThread;
+import com.sanyinchen.jsbridge.queue.ReactQueueConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.CopyOnWriteArraySet;

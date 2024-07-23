@@ -9,9 +9,7 @@ package com.sanyinchen.jsbridge.data;
 
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.jni.HybridData;
-import com.facebook.proguard.annotations.DoNotStrip;
-
-import javax.annotation.Nullable;
+import com.facebook.jni.annotations.DoNotStrip;
 
 /**
  * Implementation of a write-only array stored in native memory. Use
@@ -20,9 +18,7 @@ import javax.annotation.Nullable;
  */
 @DoNotStrip
 public class WritableNativeArray extends ReadableNativeArray implements WritableArray {
-  static {
-    ReactBridge.staticInit();
-  }
+
 
   public WritableNativeArray() {
     super(initHybrid());

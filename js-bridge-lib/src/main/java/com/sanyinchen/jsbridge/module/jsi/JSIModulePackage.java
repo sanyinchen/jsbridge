@@ -7,6 +7,9 @@
 
 package com.sanyinchen.jsbridge.module.jsi;
 
+import com.sanyinchen.jsbridge.context.JavaScriptContextHolder;
+import com.sanyinchen.jsbridge.JsBridgeContext;
+
 import java.util.List;
 
 /**
@@ -17,6 +20,6 @@ public interface JSIModulePackage {
   /**
    * @return a {@link List < JSIModuleSpec >} that contain the list of JSI Modules.
    */
-  List<JSIModuleSpec> getJSIModules(ReactApplicationContext reactApplicationContext, JavaScriptContextHolder jsContext);
+  List<JSIModuleSpec> getJSIModules(JsBridgeContext reactApplicationContext, JavaScriptContextHolder jsContext);
 
 }
