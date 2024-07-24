@@ -9,6 +9,7 @@ package com.sanyinchen.jsbridge;
 
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.jni.HybridData;
 import com.facebook.jni.annotations.DoNotStrip;
+import com.facebook.soloader.SoLoader;
 import com.sanyinchen.jsbridge.annotation.ReactModule;
 import com.sanyinchen.jsbridge.base.JsBridgeInstance;
 import com.sanyinchen.jsbridge.config.ReactConstants;
@@ -58,6 +60,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @DoNotStrip
 public class JsBridgeInstanceImpl implements JsBridgeInstance {
+    static {
+        SoLoader.loadLibrary("js-bridge");
+    }
 
     private static final AtomicInteger sNextInstanceIdForTrace = new AtomicInteger(1);
 

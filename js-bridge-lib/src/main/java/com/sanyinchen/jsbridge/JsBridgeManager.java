@@ -144,7 +144,7 @@ public class JsBridgeManager {
     }
 
     @ThreadConfined(UI)
-    public void createReactContextInBackground() {
+    public void run() {
         Assertions.assertCondition(
                 !mHasStartedCreatingInitialContext,
                 "createReactContextInBackground should only be called when creating the react " +

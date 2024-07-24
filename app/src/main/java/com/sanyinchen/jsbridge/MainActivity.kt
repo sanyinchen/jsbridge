@@ -17,13 +17,23 @@ import com.sanyinchen.jsbridge.ui.theme.MainLayoutTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        init()
         setContent {
             mainContent()
         }
     }
 
+    private fun init() {
+        val jsBridgeInstanceManager = JsBridgeManagerBuilder()
+            .setApplication(application)
+            .setBundleAssetName("js-bridge-bundle.js")
+            .setNativeModuleCallExceptionHandler { e -> e.printStackTrace() }
+            .build()
+        jsBridgeInstanceManager.run()
+    }
+
     @Composable
-    fun mainContent() {
+    private fun mainContent() {
         val textViewMsg = remember { mutableStateOf("Hello, World!") }
         MainLayoutTheme {
             Column(
