@@ -7,6 +7,7 @@ package com.sanyinchen.jsbridge.module.bridge;
 
 import com.sanyinchen.jsbridge.JsBridgeContext;
 import com.sanyinchen.jsbridge.JsBridgeManager;
+import com.sanyinchen.jsbridge.config.ReactFeatureFlags;
 
 import java.util.HashMap;
 import java.util.Map;

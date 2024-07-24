@@ -16,9 +16,11 @@ import androidx.annotation.Nullable;
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.jni.HybridData;
 import com.facebook.jni.annotations.DoNotStrip;
+import com.sanyinchen.jsbridge.annotation.ReactModule;
 import com.sanyinchen.jsbridge.base.JsBridgeInstance;
 import com.sanyinchen.jsbridge.config.ReactConstants;
 import com.sanyinchen.jsbridge.context.JavaScriptContextHolder;
+import com.sanyinchen.jsbridge.common.callback.JsBridgeCallback;
 import com.sanyinchen.jsbridge.data.NativeArray;
 import com.sanyinchen.jsbridge.data.NativeArrayInterface;
 import com.sanyinchen.jsbridge.data.WritableNativeArray;
@@ -46,7 +48,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -139,7 +140,7 @@ public class JsBridgeInstanceImpl implements JsBridgeInstance {
         mJavaScriptContextHolder = new JavaScriptContextHolder(getJavaScriptContext());
     }
 
-    private static class BridgeCallback implements ReactCallback {
+    private static class BridgeCallback implements JsBridgeCallback {
         // We do this so the callback doesn't keep the CatalystInstanceImpl alive.
         // In this case, the callback is held in C++ code, so the GC can't see it
         // and determine there's an inaccessible cycle.
@@ -185,7 +186,7 @@ public class JsBridgeInstanceImpl implements JsBridgeInstance {
         //Extend the Java-visible registry of modules
         mNativeModuleRegistry.registerModules(modules);
         Collection<JavaModuleWrapper> javaModules = modules.getJavaModules(this);
-        Collection<NativeModule> cxxModules = modules.getCxxModules();
+        Collection<NativeModuleHolder> cxxModules = modules.getCxxModules();
         //Extend the Cxx-visible registry of modules wrapped in appropriate interfaces
         jniExtendNativeModules(javaModules, cxxModules);
     }
@@ -195,23 +196,13 @@ public class JsBridgeInstanceImpl implements JsBridgeInstance {
             Collection<NativeModuleHolder> cxxModules);
 
     private native void initializeBridge(
-            ReactCallback callback,
+            JsBridgeCallback callback,
             JavaScriptExecutor jsExecutor,
             MessageQueueThread jsQueue,
             MessageQueueThread moduleQueue,
             Collection<JavaModuleWrapper> javaModules,
             Collection<NativeModuleHolder> cxxModules);
 
-    @Override
-    public void setSourceURLs(String deviceURL, String remoteURL) {
-        mSourceURL = deviceURL;
-        jniSetSourceURL(remoteURL);
-    }
-
-    @Override
-    public void registerSegment(int segmentId, String path) {
-        jniRegisterSegment(segmentId, path);
-    }
 
     @Override
     public void loadScriptFromAssets(AssetManager assetManager, String assetURL, boolean loadSynchronously) {
@@ -219,30 +210,8 @@ public class JsBridgeInstanceImpl implements JsBridgeInstance {
         jniLoadScriptFromAssets(assetManager, assetURL, loadSynchronously);
     }
 
-    @Override
-    public void loadScriptFromFile(String fileName, String sourceURL, boolean loadSynchronously) {
-        mSourceURL = sourceURL;
-        jniLoadScriptFromFile(fileName, sourceURL, loadSynchronously);
-    }
-
-    @Override
-    public void loadScriptFromDeltaBundle(
-            String sourceURL,
-            NativeDeltaClient deltaClient,
-            boolean loadSynchronously) {
-        mSourceURL = sourceURL;
-        jniLoadScriptFromDeltaBundle(sourceURL, deltaClient, loadSynchronously);
-    }
-
-    private native void jniSetSourceURL(String sourceURL);
-
-    private native void jniRegisterSegment(int segmentId, String path);
-
     private native void jniLoadScriptFromAssets(AssetManager assetManager, String assetURL, boolean loadSynchronously);
 
-    private native void jniLoadScriptFromFile(String fileName, String sourceURL, boolean loadSynchronously);
-
-    private native void jniLoadScriptFromDeltaBundle(String sourceURL, NativeDeltaClient deltaClient, boolean loadSynchronously);
 
     @Override
     public void runJSBundle() {

@@ -7,6 +7,8 @@
 
 package com.sanyinchen.jsbridge.data;
 
+import androidx.annotation.Nullable;
+
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.jni.HybridData;
 import com.facebook.jni.annotations.DoNotStrip;

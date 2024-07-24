@@ -95,9 +95,6 @@ public interface JsBridgeInstance
     void extendNativeModules(NativeModuleRegistry modules);
 
 
-    /** This method registers the file path of an additional JS segment by its ID. */
-    void registerSegment(int segmentId, String path);
-
     void setGlobalVariable(String propName, String jsonValue);
 
     /**

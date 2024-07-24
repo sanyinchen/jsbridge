@@ -6,12 +6,13 @@
  */
 package com.sanyinchen.jsbridge.module.bridge;
 
-import android.util.Log;
-
 import com.facebook.infer.annotation.Assertions;
 import com.sanyinchen.jsbridge.JsBridgeContext;
+import com.sanyinchen.jsbridge.annotation.ReactModule;
 import com.sanyinchen.jsbridge.base.JSInstance;
 import com.sanyinchen.jsbridge.module.impl.java.JavaModuleWrapper;
+import com.sanyinchen.jsbridge.common.callback.OnBatchCompleteListener;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +42,7 @@ public class NativeModuleRegistry {
         return mReactApplicationContext;
     }
 
-    /* package */ Collection<JavaModuleWrapper> getJavaModules(JSInstance jsInstance) {
+    public Collection<JavaModuleWrapper> getJavaModules(JSInstance jsInstance) {
         ArrayList<JavaModuleWrapper> javaModules = new ArrayList<>();
         for (Map.Entry<String, NativeModuleHolder> entry : mModules.entrySet()) {
             if (!entry.getValue().isCxxModule()) {
@@ -51,11 +52,10 @@ public class NativeModuleRegistry {
         return javaModules;
     }
 
-    /* package */ Collection<NativeModuleHolder> getCxxModules() {
+    public Collection<NativeModuleHolder> getCxxModules() {
         ArrayList<NativeModuleHolder> cxxModules = new ArrayList<>();
         for (Map.Entry<String, NativeModuleHolder> entry : mModules.entrySet()) {
             if (entry.getValue().isCxxModule()) {
-                Log.d("src_test_", "cxx:" + entry.getKey());
                 cxxModules.add(entry.getValue());
             }
         }
@@ -65,7 +65,7 @@ public class NativeModuleRegistry {
     /*
      * Adds any new modules to the current module registry
      */
-    /* package */ void registerModules(NativeModuleRegistry newRegister) {
+    public void registerModules(NativeModuleRegistry newRegister) {
 
         Assertions.assertCondition(
                 mReactApplicationContext.equals(newRegister.getReactApplicationContext()),
@@ -82,14 +82,14 @@ public class NativeModuleRegistry {
         }
     }
 
-    /* package */ void notifyJSInstanceDestroy() {
+    public void notifyJSInstanceDestroy() {
         mReactApplicationContext.assertOnNativeModulesQueueThread();
         for (NativeModuleHolder module : mModules.values()) {
             module.destroy();
         }
     }
 
-    /* package */ void notifyJSInstanceInitialized() {
+    public void notifyJSInstanceInitialized() {
         mReactApplicationContext.assertOnNativeModulesQueueThread(
                 "From version React Native v0.44, "
                         + "native modules are explicitly not initialized on the UI thread. See "

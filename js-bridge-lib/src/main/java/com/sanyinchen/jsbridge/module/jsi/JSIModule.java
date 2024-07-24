@@ -7,16 +7,25 @@
 
 package com.sanyinchen.jsbridge.module.jsi;
 
+import com.sanyinchen.jsbridge.JsBridgeContext;
+import com.sanyinchen.jsbridge.context.JavaScriptContextHolder;
+
 import java.util.List;
 
 /**
- * Interface used to initialize JSI Modules into the JSI Bridge.
+ * Marker interface used to represent a JSI Module.
  */
 public interface JSIModule {
 
-  /**
-   * @return a {@link List < JSIModuleSpec >} that contain the list of JSI Modules.
-   */
-  List<JSIModuleSpec> getJSIModules(ReactApplicationContext reactApplicationContext, JavaScriptContextHolder jsContext);
+    /**
+     * This is called at the end of {@link CatalystApplicationFragment#createCatalystInstance()}
+     * after the CatalystInstance has been created, in order to initialize NativeModules that require
+     * the CatalystInstance or JS modules.
+     */
+    void initialize();
 
+    /**
+     * Called before {CatalystInstance#onHostDestroy}
+     */
+    void onCatalystInstanceDestroy();
 }

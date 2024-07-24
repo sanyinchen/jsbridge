@@ -7,6 +7,8 @@
 
 package com.sanyinchen.jsbridge.module.impl.java;
 
+import com.sanyinchen.jsbridge.module.bridge.NativeModule;
+
 import java.util.Map;
 
 import javax.annotation.Nullable;

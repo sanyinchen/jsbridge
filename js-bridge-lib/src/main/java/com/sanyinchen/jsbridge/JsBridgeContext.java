@@ -27,6 +27,7 @@ import com.sanyinchen.jsbridge.module.bridge.NativeModule;
 import com.sanyinchen.jsbridge.module.js.JavaScriptModule;
 import com.sanyinchen.jsbridge.queue.MessageQueueThread;
 import com.sanyinchen.jsbridge.queue.ReactQueueConfiguration;
+import com.sanyinchen.jsbridge.utils.UiThreadUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -176,7 +177,6 @@ public class JsBridgeContext extends ContextWrapper {
      */
     public void onHostResume(@Nullable Activity activity) {
         mCurrentActivity = new WeakReference(activity);
-        ReactMarker.logMarker(ReactMarkerConstants.ON_HOST_RESUME_START);
         for (LifecycleEventListener listener : mLifecycleEventListeners) {
             try {
                 listener.onHostResume();
@@ -184,7 +184,6 @@ public class JsBridgeContext extends ContextWrapper {
                 handleException(e);
             }
         }
-        ReactMarker.logMarker(ReactMarkerConstants.ON_HOST_RESUME_END);
     }
 
     public void onNewIntent(@Nullable Activity activity, Intent intent) {
@@ -203,7 +202,6 @@ public class JsBridgeContext extends ContextWrapper {
      * Should be called by the hosting Fragment in {@link Fragment#onPause}
      */
     public void onHostPause() {
-        ReactMarker.logMarker(ReactMarkerConstants.ON_HOST_PAUSE_START);
         for (LifecycleEventListener listener : mLifecycleEventListeners) {
             try {
                 listener.onHostPause();
@@ -211,7 +209,6 @@ public class JsBridgeContext extends ContextWrapper {
                 handleException(e);
             }
         }
-        ReactMarker.logMarker(ReactMarkerConstants.ON_HOST_PAUSE_END);
     }
 
     /**

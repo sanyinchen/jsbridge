@@ -282,7 +282,7 @@ public class JsBridgeManager {
     }
 
     /**
-     * @return instance of {@link ReactContext} configured a {@link JsBridgeInstance} set
+     * @return instance of {@link JsBridgeContext} configured a {@link JsBridgeInstance} set
      */
     private JsBridgeContext createReactContext(
             JavaScriptExecutor jsExecutor,

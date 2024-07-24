@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.jni.HybridData;
-import com.facebook.proguard.annotations.DoNotStrip;
+import com.facebook.jni.annotations.DoNotStrip;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,9 +24,6 @@ import javax.annotation.Nullable;
  */
 @DoNotStrip
 public class WritableNativeMap extends ReadableNativeMap implements WritableMap {
-  static {
-    ReactBridge.staticInit();
-  }
 
   @Override
   public native void putBoolean(@Nonnull String key, boolean value);
