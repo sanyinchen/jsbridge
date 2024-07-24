@@ -21,6 +21,16 @@ namespace facebook {
             return initialize(vm, [] {
                 gloginit::initialize();
                 FLAGS_minloglevel = 0;
+                NativeArray::registerNatives();
+                NativeDeltaClient::registerNatives();
+                ReadableNativeArray::registerNatives();
+                WritableNativeArray::registerNatives();
+                NativeMap::registerNatives();
+                ReadableNativeMap::registerNatives();
+                WritableNativeMap::registerNatives();
+                ReadableNativeMapKeySetIterator::registerNatives();
+
+
             });
         }
 

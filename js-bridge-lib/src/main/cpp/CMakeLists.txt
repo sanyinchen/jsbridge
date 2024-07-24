@@ -50,7 +50,11 @@ include_directories(.)
 include_directories(glog)
 include_directories(glog/glog/exported)
 include_directories(fbgloginit)
+include_directories(folly)
+include_directories(folly/folly)
 
+
+add_subdirectory(folly/folly)
 add_subdirectory(fbgloginit)
 add_subdirectory(glog/glog)
 add_subdirectory(bridge)
