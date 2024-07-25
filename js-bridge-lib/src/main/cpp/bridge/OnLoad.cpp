@@ -10,6 +10,7 @@
 #include <fbjni/fbjni.h>
 #include <fb/glog_init.h>
 #include <fbjni/detail/Log.h>
+#include "bridge/include/NativeArray.h"
 
 using namespace facebook::jni;
 
@@ -22,13 +23,13 @@ namespace facebook {
                 gloginit::initialize();
                 FLAGS_minloglevel = 0;
                 NativeArray::registerNatives();
-                NativeDeltaClient::registerNatives();
-                ReadableNativeArray::registerNatives();
-                WritableNativeArray::registerNatives();
-                NativeMap::registerNatives();
-                ReadableNativeMap::registerNatives();
-                WritableNativeMap::registerNatives();
-                ReadableNativeMapKeySetIterator::registerNatives();
+//                NativeDeltaClient::registerNatives();
+//                ReadableNativeArray::registerNatives();
+//                WritableNativeArray::registerNatives();
+//                NativeMap::registerNatives();
+//                ReadableNativeMap::registerNatives();
+//                WritableNativeMap::registerNatives();
+//                ReadableNativeMapKeySetIterator::registerNatives();
 
 
             });

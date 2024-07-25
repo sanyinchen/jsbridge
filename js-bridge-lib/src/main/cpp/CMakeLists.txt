@@ -34,6 +34,9 @@ project(js-bridge CXX)
 #启用最高级别的优化选项。这会生成更快的代码，但可能会使编译时间更长。
 #-DNDEBUG:
 #定义 NDEBUG 宏，通常用于禁用调试相关的断言 (assert)。
+set(FOLLY_FLAGS "-DFOLLY_NO_CONFIG -DFOLLY_HAVE_CLOCK_GETTIME -DFOLLY_HAVE_MEMRCHR -DFOLLY_USE_LIBCPP -DFOLLY_HAVE_XSI_STRERROR_R=1")
+set(CMAKE_CXX_FLAGS "${FOLLY_FLAGS}")
+
 add_compile_options(
         -Wall
         -std=c++14
@@ -46,16 +49,20 @@ add_compile_options(
         -DNDEBUG
 )
 
+
 include_directories(.)
 include_directories(glog)
 include_directories(glog/glog/exported)
 include_directories(fbgloginit)
 include_directories(folly)
 include_directories(folly/folly)
+include_directories(double-conversion)
+include_directories(boost/boost_1_63_0)
 
-
+add_subdirectory(boost)
 add_subdirectory(folly/folly)
 add_subdirectory(fbgloginit)
 add_subdirectory(glog/glog)
 add_subdirectory(bridge)
 add_subdirectory(fbjni)
+add_subdirectory(double-conversion/double-conversion)

@@ -19,5 +19,5 @@ file(GLOB SOURCES
 
 add_library(js-bridge SHARED ${SOURCES})
 
-target_link_libraries(js-bridge fbjni glog glog_init folly_json android log)
+target_link_libraries(js-bridge fbjni folly_json glog glog_init android log)
 

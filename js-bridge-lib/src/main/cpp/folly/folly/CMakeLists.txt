@@ -2,7 +2,6 @@
 
 include_directories(./folly)
 
-
 file(GLOB SOURCE "json.cpp"
         "Unicode.cpp"
         "Conv.cpp"
@@ -24,7 +23,6 @@ add_library(folly_json
         SHARED
         ${SOURCE}
 )
-
 target_link_libraries(folly_json
         glog
         double-conversion
