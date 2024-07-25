@@ -284,7 +284,7 @@ class HybridClass : public detail::HybridTraits<Base>::CxxBase {
   // translation code (for example, calling throwNewJavaException on a
   // particular java class) to be hoisted to a common function.  If mapException
   // returns, then the std::exception will be translated to Java.
-  static void mapException(std::exception_ptr ex) {
+  static void mapException(std::exception ex) {
     (void)ex;
   }
 };

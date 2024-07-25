@@ -42,6 +42,9 @@ import static com.facebook.infer.annotation.ThreadConfined.UI;
 
 @ThreadSafe
 public class JsBridgeManager {
+    static {
+        SoLoader.loadLibrary("js-bridge");
+    }
 
     private @Nullable
     @ThreadConfined(UI)

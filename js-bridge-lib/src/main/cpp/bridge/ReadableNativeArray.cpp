@@ -25,6 +25,7 @@ void ReadableNativeArray::mapException(const std::exception& ex) {
   }
 }
 
+
 jint ReadableNativeArray::getSize() {
   return array_.size();
 }

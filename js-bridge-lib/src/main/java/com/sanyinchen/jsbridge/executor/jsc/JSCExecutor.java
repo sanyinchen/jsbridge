@@ -9,12 +9,15 @@ package com.sanyinchen.jsbridge.executor.jsc;
 
 import com.facebook.jni.HybridData;
 import com.facebook.jni.annotations.DoNotStrip;
+import com.facebook.soloader.SoLoader;
 import com.sanyinchen.jsbridge.data.ReadableNativeMap;
 import com.sanyinchen.jsbridge.executor.base.JavaScriptExecutor;
 
 @DoNotStrip
         /* package */ class JSCExecutor extends JavaScriptExecutor {
-
+    static {
+        SoLoader.loadLibrary("jscexecutor");
+    }
 
     /* package */ JSCExecutor(ReadableNativeMap jscConfig) {
         super(initHybrid(jscConfig));

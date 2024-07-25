@@ -6,11 +6,16 @@
 #pragma once
 
 #include <jni.h>
+#include "bridge/include/ReadableNativeMap.h"
+#include "bridge/include/NativeArray.h"
+#include "bridge/include/ReadableNativeArray.h"
+#include "bridge/include/WritableNativeArray.h"
+#include "bridge/include/WritableNativeMap.h"
 
 namespace facebook {
-namespace react {
+    namespace react {
 
-jmethodID getLogMarkerMethod();
+        jmethodID getLogMarkerMethod();
 
-} // namespace react
+    } // namespace react
 } // namespace facebook

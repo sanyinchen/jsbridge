@@ -17,6 +17,7 @@
 package com.facebook.jni;
 
 import com.facebook.jni.annotations.DoNotStripAny;
+import com.facebook.soloader.SoLoader;
 import com.facebook.soloader.nativeloader.NativeLoader;
 
 /**
@@ -31,7 +32,7 @@ import com.facebook.soloader.nativeloader.NativeLoader;
 public class HybridData {
 
     static {
-        NativeLoader.loadLibrary("js-bridge");
+        SoLoader.loadLibrary("js-bridge");
     }
 
     private final Destructor mDestructor = new Destructor(this);
