@@ -18,6 +18,36 @@ using namespace facebook::jni;
 namespace facebook {
     namespace react {
 
+        namespace {
+
+            struct JavaJSExecutor : public JavaClass<JavaJSExecutor> {
+                static constexpr auto kJavaDescriptor = "Lcom/sanyinchen/jsbridge/executor/java/JavaJSExecutor;";
+            };
+
+            class ProxyJavaScriptExecutorHolder : public HybridClass<ProxyJavaScriptExecutorHolder,
+                    JavaScriptExecutorHolder> {
+            public:
+                static constexpr auto kJavaDescriptor = "Lcom/sanyinchen/jsbridge/executor/ProxyJavaScriptExecutor;";
+
+                static local_ref<jhybriddata> initHybrid(
+                        alias_ref<jclass>, alias_ref<JavaJSExecutor::javaobject> executorInstance) {
+                    return makeCxxInstance(
+                            std::make_shared<ProxyExecutorOneTimeFactory>(
+                                    make_global(executorInstance)));
+                }
+
+                static void registerNatives() {
+                    registerHybrid({
+                                           makeNativeMethod("initHybrid", ProxyJavaScriptExecutorHolder::initHybrid),
+                                   });
+                }
+
+            private:
+                friend HybridBase;
+                using HybridBase::HybridBase;
+            };
+
+        }
 
         extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
             return initialize(vm, [] {
@@ -35,6 +65,11 @@ namespace facebook {
                 ReadableNativeMap::registerNatives();
                 WritableNativeMap::registerNatives();
                 ReadableNativeMapKeySetIterator::registerNatives();
+
+                ProxyJavaScriptExecutorHolder::registerNatives();
+                CxxModuleWrapperBase::registerNatives();
+                CxxModuleWrapper::registerNatives();
+                JCxxCallbackImpl::registerNatives();
 
                 JsBridgeInstanceImpl::registerNatives();
             });
