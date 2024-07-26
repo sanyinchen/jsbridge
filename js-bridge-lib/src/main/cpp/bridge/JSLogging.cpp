@@ -3,9 +3,9 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-#include "include/JSLogging.h"
+#include "bridge/include/JSLogging.h"
 
-#include <fbjni/detail/Log.h>
+#include "fbjni/detail/Log.h"
 
 namespace facebook {
     namespace react {

@@ -8,8 +8,8 @@
 #include "jscexecutor/jsi/jsi/JSCRuntime.h"
 #include "JSExecutor.h"
 #include <jsiexecutor/JSIExecutor.h>
-#include <JavaScriptExecutorHolder.h>
-#include <JSLogging.h>
+#include "bridge/include/JavaScriptExecutorHolder.h"
+#include "bridge/include/JSLogging.h"
 #include <ReadableNativeMap.h>
 
 namespace facebook {

@@ -9,7 +9,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include <jscexecutor/include/JSExecutor.h>
+#include "JSExecutor.h"
 #include <folly/Optional.h>
 #include <folly/dynamic.h>
 

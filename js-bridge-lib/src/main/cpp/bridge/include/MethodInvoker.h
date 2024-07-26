@@ -7,7 +7,7 @@
 
 #include <vector>
 
-#include <jscexecutor/include/JSExecutor.h>
+#include "JSExecutor.h"
 #include <fbjni/fbjni.h>
 #include <folly/dynamic.h>
 

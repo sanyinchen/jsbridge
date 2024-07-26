@@ -7,7 +7,7 @@
 
 #include "JSBigString.h"
 #include "JSBundleType.h"
-#include <jscexecutor/include/JSExecutor.h>
+#include "bridge/include/JSExecutor.h"
 #include "MessageQueueThread.h"
 #include "MethodCall.h"
 #include "NativeToJsBridge.h"

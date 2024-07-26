@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "JSExecutor.h"
-#include <fbjni/fbjni.h>
+#include "fbjni/fbjni.h"
 
 namespace facebook {
     namespace react {

@@ -12,42 +12,11 @@
 #include <fbjni/detail/Log.h>
 #include "include/JsBridgeInstanceImpl.h"
 #include <fbjni/NativeRunnable.h>
-
-using namespace facebook::jni;
+#include "JCallback.h"
+#include "ProxyJavaScriptExecutorHolder.h"
 
 namespace facebook {
     namespace react {
-
-        namespace {
-
-            struct JavaJSExecutor : public JavaClass<JavaJSExecutor> {
-                static constexpr auto kJavaDescriptor = "Lcom/sanyinchen/jsbridge/executor/java/JavaJSExecutor;";
-            };
-
-            class ProxyJavaScriptExecutorHolder : public HybridClass<ProxyJavaScriptExecutorHolder,
-                    JavaScriptExecutorHolder> {
-            public:
-                static constexpr auto kJavaDescriptor = "Lcom/sanyinchen/jsbridge/executor/ProxyJavaScriptExecutor;";
-
-                static local_ref<jhybriddata> initHybrid(
-                        alias_ref<jclass>, alias_ref<JavaJSExecutor::javaobject> executorInstance) {
-                    return makeCxxInstance(
-                            std::make_shared<ProxyExecutorOneTimeFactory>(
-                                    make_global(executorInstance)));
-                }
-
-                static void registerNatives() {
-                    registerHybrid({
-                                           makeNativeMethod("initHybrid", ProxyJavaScriptExecutorHolder::initHybrid),
-                                   });
-                }
-
-            private:
-                friend HybridBase;
-                using HybridBase::HybridBase;
-            };
-
-        }
 
         extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
             return initialize(vm, [] {

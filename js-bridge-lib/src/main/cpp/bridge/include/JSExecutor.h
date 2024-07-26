@@ -8,8 +8,8 @@
 #include <memory>
 #include <string>
 
-#include <NativeModule.h>
-#include <folly/dynamic.h>
+#include "NativeModule.h"
+#include "folly/folly/dynamic.h"
 
 #ifndef RN_EXPORT
 #define RN_EXPORT __attribute__((visibility("default")))

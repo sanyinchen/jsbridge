@@ -23,7 +23,7 @@ struct JCallback : public jni::JavaClass<JCallback> {
 
 class JCxxCallbackImpl : public jni::HybridClass<JCxxCallbackImpl, JCallback> {
 public:
-  constexpr static auto kJavaDescriptor = "Lcom/facebook/react/bridge/CxxCallbackImpl;";
+  constexpr static auto kJavaDescriptor = "Lcom/sanyinchen/jsbridge/message/CxxCallbackImpl;";
 
   static void registerNatives() {
     javaClassStatic()->registerNatives({

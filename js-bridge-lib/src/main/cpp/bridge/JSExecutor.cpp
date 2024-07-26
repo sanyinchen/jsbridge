@@ -3,11 +3,11 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-#include "include/JSExecutor.h"
+#include "bridge/include/JSExecutor.h"
 
 #include "RAMBundleRegistry.h"
 
-#include <folly/Conv.h>
+#include "folly/folly/Conv.h"
 
 namespace facebook {
 namespace react {

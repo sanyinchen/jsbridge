@@ -8,7 +8,7 @@
 #include <string>
 
 #include <android/asset_manager.h>
-#include <jscexecutor/include/JSExecutor.h>
+#include "JSExecutor.h"
 #include <fbjni/fbjni.h>
 
 namespace facebook {

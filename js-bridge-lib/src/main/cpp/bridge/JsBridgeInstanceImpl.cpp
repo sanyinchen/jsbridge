@@ -24,7 +24,7 @@
 #include <folly/Memory.h>
 
 #include "CxxModuleWrapper.h"
-#include "jscexecutor/include/JavaScriptExecutorHolder.h"
+#include "bridge/include/JavaScriptExecutorHolder.h"
 #include "JNativeRunnable.h"
 #include "JniJSModulesUnbundle.h"
 #include "NativeArray.h"

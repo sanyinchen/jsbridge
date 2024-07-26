@@ -7,8 +7,8 @@ include_directories(./include)
 
 file(GLOB_RECURSE SOURCE
         ./*.cpp
-        ./JSExecutor.cpp
-        ./JSLogging.cpp
+        ../bridge/JSExecutor.cpp
+        ../bridge/JSLogging.cpp
         ./OnLoad.cpp
 )
 

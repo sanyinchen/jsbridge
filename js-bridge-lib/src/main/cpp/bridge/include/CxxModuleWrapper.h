@@ -13,7 +13,7 @@ namespace react {
 class CxxModuleWrapper : public jni::HybridClass<CxxModuleWrapper, CxxModuleWrapperBase> {
 public:
   constexpr static const char *const kJavaDescriptor =
-    "Lcom/facebook/react/bridge/CxxModuleWrapper;";
+    "Lcom/sanyinchen/jsbridge/message/CxxModuleWrapper;";
 
   static void registerNatives() {
     registerHybrid({

@@ -8,7 +8,7 @@
 #include "JSINativeModules.h"
 
 #include <JSBigString.h>
-#include <jscexecutor/include/JSExecutor.h>
+#include "bridge/include/JSExecutor.h"
 #include <RAMBundleRegistry.h>
 #include <jsi/jsi.h>
 #include <functional>
