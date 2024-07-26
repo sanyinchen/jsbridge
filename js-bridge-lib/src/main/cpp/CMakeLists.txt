@@ -37,15 +37,17 @@ project(js-bridge CXX)
 set(FOLLY_FLAGS "-DFOLLY_NO_CONFIG -DFOLLY_HAVE_CLOCK_GETTIME -DFOLLY_HAVE_MEMRCHR -DFOLLY_USE_LIBCPP -DFOLLY_NO_CONFIG=1 -DFOLLY_HAVE_XSI_STRERROR_R=1 -DENABLE_FBASSERT")
 
 # 为 C++ 编译器添加 -v 标志
-set(CMAKE_CXX_FLAGS "${FOLLY_FLAGS} -v")
+set(CMAKE_CXX_FLAGS "${FOLLY_FLAGS} -g")
 
 # 为链接器添加 -v 标志
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -v")
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -v")
-set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -v")
-
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -v")
+#set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -v")
+#set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -v")
 # 可选：设置 CMAKE_VERBOSE_MAKEFILE 为 ON 以获得更多的构建过程信息
-set(CMAKE_VERBOSE_MAKEFILE ON)
+#set(CMAKE_VERBOSE_MAKEFILE ON)
+
+set(CMAKE_BUILD_TYPE Debug)
+
 add_compile_options(
         -Wall
         -std=c++14
@@ -54,8 +56,7 @@ add_compile_options(
         -fexceptions
         -frtti
         -ffunction-sections
-        -O3
-        -DNDEBUG
+        -O0
 )
 
 

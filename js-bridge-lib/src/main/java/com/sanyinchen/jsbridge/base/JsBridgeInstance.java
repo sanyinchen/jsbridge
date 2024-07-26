@@ -34,6 +34,7 @@ import java.util.List;
 @DoNotStrip
 public interface JsBridgeInstance
         extends MemoryPressureListener, JSInstance, JSBundleLoaderDelegate {
+
     void runJSBundle();
 
     // Returns the status of running the JS bundle; waits for an answer if runJSBundle is running
