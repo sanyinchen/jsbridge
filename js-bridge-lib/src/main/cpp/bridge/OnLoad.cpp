@@ -11,7 +11,7 @@
 #include <fb/glog_init.h>
 #include <fbjni/detail/Log.h>
 #include "include/JsBridgeInstanceImpl.h"
-
+#include <fbjni/NativeRunnable.h>
 
 using namespace facebook::jni;
 
@@ -23,6 +23,11 @@ namespace facebook {
             return initialize(vm, [] {
                 gloginit::initialize();
                 FLAGS_minloglevel = 0;
+
+                HybridDataOnLoad();
+                JNativeRunnable::OnLoad();
+                ThreadScope::OnLoad();
+
                 NativeArray::registerNatives();
                 ReadableNativeArray::registerNatives();
                 WritableNativeArray::registerNatives();

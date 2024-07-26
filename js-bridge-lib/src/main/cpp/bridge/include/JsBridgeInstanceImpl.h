@@ -30,6 +30,7 @@ namespace facebook {
 
         class JsBridgeInstanceImpl : public jni::HybridClass<JsBridgeInstanceImpl> {
         public:
+
             static constexpr auto kJavaDescriptor = "Lcom/sanyinchen/jsbridge/JsBridgeInstanceImpl;";
 
             static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jclass>);
