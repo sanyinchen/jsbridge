@@ -30,3 +30,4 @@
 #include <fbjni/detail/ReferenceAllocators.h>
 #include <fbjni/detail/References.h>
 #include <fbjni/detail/Registration.h>
+#include "fbjni/detail/Assert.h"

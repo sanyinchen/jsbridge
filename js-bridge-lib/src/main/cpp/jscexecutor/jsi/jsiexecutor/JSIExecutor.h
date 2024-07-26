@@ -7,9 +7,9 @@
 
 #include "JSINativeModules.h"
 
-#include <cxxreact/JSBigString.h>
-#include <cxxreact/JSExecutor.h>
-#include <cxxreact/RAMBundleRegistry.h>
+#include <JSBigString.h>
+#include <jscexecutor/include/JSExecutor.h>
+#include <RAMBundleRegistry.h>
 #include <jsi/jsi.h>
 #include <functional>
 #include <mutex>

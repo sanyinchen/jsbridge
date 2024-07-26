@@ -2,8 +2,16 @@
 
 
 include_directories(./*)
+include_directories(./jsi)
+include_directories(./include)
 
-file(GLOB SOURCE ./*.cpp)
+file(GLOB_RECURSE SOURCE
+        ./*.cpp
+        ./JSExecutor.cpp
+        ./JSLogging.cpp
+        ./OnLoad.cpp
+)
+
 add_library(jscexecutor
         SHARED
         ${SOURCE}
@@ -11,9 +19,8 @@ add_library(jscexecutor
 
 
 target_link_libraries(jscexecutor
-        jsi
-        jsireact
+        fbjni
         folly_json
-        fb
         js-bridge
+        jsc
 )

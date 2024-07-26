@@ -8,7 +8,7 @@
 #include <memory>
 #include <string>
 
-#include <cxxreact/ModuleRegistry.h>
+#include <ModuleRegistry.h>
 #include <folly/Optional.h>
 #include <jsi/jsi.h>
 

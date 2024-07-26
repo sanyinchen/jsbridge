@@ -22,8 +22,8 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_TOOLCHAIN=clang'
-                targets 'js-bridge'
+                arguments '-DANDROID_TOOLCHAIN=clang -v'
+                targets 'js-bridge', 'jscexecutor'
                 version '3.22.1'
             }
         }

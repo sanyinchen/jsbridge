@@ -3,17 +3,15 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-#include "jsireact/JSIExecutor.h"
+#include "JSIExecutor.h"
 
-#include <cxxreact/JSBigString.h>
-#include <cxxreact/ModuleRegistry.h>
-#include <cxxreact/ReactMarker.h>
-#include <cxxreact/SystraceSection.h>
+#include <JSBigString.h>
+#include <ModuleRegistry.h>
 #include <folly/Conv.h>
 #include <folly/json.h>
 #include <glog/logging.h>
 #include <jsi/JSIDynamic.h>
-#include <fb/log.h>
+#include <fbjni/detail/Log.h>
 #include <sstream>
 #include <stdexcept>
 
@@ -72,8 +70,6 @@ namespace facebook {
         void JSIExecutor::loadApplicationScript(
                 std::unique_ptr<const JSBigString> script,
                 std::string sourceURL) {
-            SystraceSection s("JSIExecutor::loadApplicationScript");
-
             // TODO: check for and use precompiled HBC
             // LOGD("run is real in here ?");
 
@@ -145,20 +141,10 @@ namespace facebook {
                 runtimeInstaller_(*runtime_);
             }
 
-            bool hasLogger(ReactMarker::logTaggedMarker);
             std::string scriptName = simpleBasename(sourceURL);
-            if (hasLogger) {
-                ReactMarker::logTaggedMarker(
-                        ReactMarker::RUN_JS_BUNDLE_START, scriptName.c_str());
-            }
             runtime_->evaluateJavaScript(
                     std::make_unique<BigStringBuffer>(std::move(script)), sourceURL);
             flush();
-            if (hasLogger) {
-                ReactMarker::logMarker(ReactMarker::CREATE_REACT_CONTEXT_STOP);
-                ReactMarker::logTaggedMarker(
-                        ReactMarker::RUN_JS_BUNDLE_STOP, scriptName.c_str());
-            }
         }
 
         void JSIExecutor::setBundleRegistry(std::unique_ptr<RAMBundleRegistry> r) {
@@ -183,8 +169,6 @@ namespace facebook {
                 uint32_t bundleId,
                 const std::string &bundlePath) {
             const auto tag = folly::to<std::string>(bundleId);
-            ReactMarker::logTaggedMarker(
-                    ReactMarker::REGISTER_JS_SEGMENT_START, tag.c_str());
             if (bundleRegistry_) {
                 bundleRegistry_->registerBundle(bundleId, bundlePath);
             } else {
@@ -193,16 +177,12 @@ namespace facebook {
                         std::make_unique<BigStringBuffer>(std::move(script)),
                         JSExecutor::getSyntheticBundlePath(bundleId, bundlePath));
             }
-            ReactMarker::logTaggedMarker(
-                    ReactMarker::REGISTER_JS_SEGMENT_STOP, tag.c_str());
         }
 
         void JSIExecutor::callFunction(
                 const std::string &moduleId,
                 const std::string &methodId,
                 const folly::dynamic &arguments) {
-            SystraceSection s(
-                    "JSIExecutor::callFunction", "moduleId", moduleId, "methodId", methodId);
             if (!callFunctionReturnFlushedQueue_) {
                 bindBridge();
             }
@@ -239,7 +219,6 @@ namespace facebook {
         void JSIExecutor::invokeCallback(
                 const double callbackId,
                 const folly::dynamic &arguments) {
-            SystraceSection s("JSIExecutor::invokeCallback", "callbackId", callbackId);
             if (!invokeCallbackAndReturnFlushedQueue_) {
                 bindBridge();
             }
@@ -258,7 +237,6 @@ namespace facebook {
         void JSIExecutor::setGlobalVariable(
                 std::string propName,
                 std::unique_ptr<const JSBigString> jsonValue) {
-            SystraceSection s("JSIExecutor::setGlobalVariable", "propName", propName);
             runtime_->global().setProperty(
                     *runtime_,
                     propName.c_str(),
@@ -282,7 +260,6 @@ namespace facebook {
 
         void JSIExecutor::bindBridge() {
             std::call_once(bindFlag_, [this] {
-                SystraceSection s("JSIExecutor::bindBridge (once)");
                 Value batchedBridgeValue =
                         runtime_->global().getProperty(*runtime_, "__fbBatchedBridge");
                 if (batchedBridgeValue.isUndefined()) {
@@ -309,7 +286,6 @@ namespace facebook {
         }
 
         void JSIExecutor::callNativeModules(const Value &queue, bool isEndOfBatch) {
-            SystraceSection s("JSIExecutor::callNativeModules");
             // If this fails, you need to pass a fully functional delegate with a
             // module registry to the factory/ctor.
             CHECK(delegate_) << "Attempting to use native modules without a delegate";
@@ -323,7 +299,6 @@ namespace facebook {
         }
 
         void JSIExecutor::flush() {
-            SystraceSection s("JSIExecutor::flush");
             if (flushedQueue_) {
                 callNativeModules(flushedQueue_->call(*runtime_), true);
                 return;

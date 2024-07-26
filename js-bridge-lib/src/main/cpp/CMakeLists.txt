@@ -34,9 +34,18 @@ project(js-bridge CXX)
 #启用最高级别的优化选项。这会生成更快的代码，但可能会使编译时间更长。
 #-DNDEBUG:
 #定义 NDEBUG 宏，通常用于禁用调试相关的断言 (assert)。
-set(FOLLY_FLAGS "-DFOLLY_NO_CONFIG -DFOLLY_HAVE_CLOCK_GETTIME -DFOLLY_HAVE_MEMRCHR -DFOLLY_USE_LIBCPP -DFOLLY_NO_CONFIG=1 -DFOLLY_HAVE_XSI_STRERROR_R=1")
-set(CMAKE_CXX_FLAGS "${FOLLY_FLAGS}")
+set(FOLLY_FLAGS "-DFOLLY_NO_CONFIG -DFOLLY_HAVE_CLOCK_GETTIME -DFOLLY_HAVE_MEMRCHR -DFOLLY_USE_LIBCPP -DFOLLY_NO_CONFIG=1 -DFOLLY_HAVE_XSI_STRERROR_R=1 -DENABLE_FBASSERT")
 
+# 为 C++ 编译器添加 -v 标志
+set(CMAKE_CXX_FLAGS "${FOLLY_FLAGS} -v")
+
+# 为链接器添加 -v 标志
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -v")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -v")
+set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -v")
+
+# 可选：设置 CMAKE_VERBOSE_MAKEFILE 为 ON 以获得更多的构建过程信息
+set(CMAKE_VERBOSE_MAKEFILE ON)
 add_compile_options(
         -Wall
         -std=c++14
@@ -59,7 +68,10 @@ include_directories(folly/folly)
 include_directories(double-conversion)
 include_directories(boost/boost_1_63_0)
 include_directories(jscexecutor)
+include_directories(bridge/include)
+include_directories(jsc)
 
+add_subdirectory(jsc)
 add_subdirectory(jscexecutor)
 add_subdirectory(boost)
 add_subdirectory(folly/folly)

@@ -10,6 +10,7 @@
 #include <fbjni/fbjni.h>
 #include <fb/glog_init.h>
 #include <fbjni/detail/Log.h>
+#include "include/JsBridgeInstanceImpl.h"
 
 
 using namespace facebook::jni;
@@ -30,7 +31,7 @@ namespace facebook {
                 WritableNativeMap::registerNatives();
                 ReadableNativeMapKeySetIterator::registerNatives();
 
-
+                JsBridgeInstanceImpl::registerNatives();
             });
         }
 

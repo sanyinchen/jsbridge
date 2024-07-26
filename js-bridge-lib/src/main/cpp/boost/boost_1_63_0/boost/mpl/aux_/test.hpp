@@ -16,7 +16,7 @@
 
 #include <boost/mpl/aux_/test/test_case.hpp>
 #include <boost/mpl/aux_/test/data.hpp>
-#include <boost/mpl/aux_/test/assert.hpp>
+#include <boost/mpl/aux_/test/Assert.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
 #include <boost/type_traits/is_same.hpp>
