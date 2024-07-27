@@ -33,6 +33,8 @@ import com.sanyinchen.jsbridge.module.bridge.NativeModule;
 import com.sanyinchen.jsbridge.module.bridge.NativeModuleHolder;
 import com.sanyinchen.jsbridge.module.bridge.NativeModuleRegistry;
 import com.sanyinchen.jsbridge.module.impl.java.JavaModuleWrapper;
+import com.sanyinchen.jsbridge.module.js.JavaScriptModule;
+import com.sanyinchen.jsbridge.module.js.JavaScriptModuleRegistry;
 import com.sanyinchen.jsbridge.module.jsi.JSIModule;
 import com.sanyinchen.jsbridge.module.jsi.JSIModuleRegistry;
 import com.sanyinchen.jsbridge.module.jsi.JSIModuleSpec;
@@ -94,6 +96,7 @@ public class JsBridgeInstanceImpl implements JsBridgeInstance {
     private final String mJsPendingCallsTitleForTrace =
             "pending_js_calls_instance" + sNextInstanceIdForTrace.getAndIncrement();
     private volatile boolean mDestroyed = false;
+    private final JavaScriptModuleRegistry mJSModuleRegistry;
     private final JSBundleLoader mJSBundleLoader;
     private final ArrayList<PendingJSCall> mJSCallsPendingInit = new ArrayList<PendingJSCall>();
     private final Object mJSCallsPendingInitLock = new Object();
@@ -128,6 +131,7 @@ public class JsBridgeInstanceImpl implements JsBridgeInstance {
                 reactQueueConfigurationSpec,
                 new NativeExceptionHandler());
         mNativeModuleRegistry = nativeModuleRegistry;
+        mJSModuleRegistry = new JavaScriptModuleRegistry();
         mJSBundleLoader = jsBundleLoader;
         mNativeModuleCallExceptionHandler = nativeModuleCallExceptionHandler;
         mNativeModulesQueueThread = mReactQueueConfiguration.getNativeModulesQueueThread();
@@ -367,6 +371,11 @@ public class JsBridgeInstanceImpl implements JsBridgeInstance {
     @Override
     public ReactQueueConfiguration getReactQueueConfiguration() {
         return mReactQueueConfiguration;
+    }
+
+    @Override
+    public <T extends JavaScriptModule> T getJSModule(Class<T> jsInterface) {
+        return mJSModuleRegistry.getJavaScriptModule(this, jsInterface);
     }
 
     @Override

@@ -6,7 +6,10 @@ import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,9 +52,13 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun mainContent() {
+        val scrollState = rememberScrollState()
         MainLayoutTheme {
             Column(
-                modifier = Modifier.padding(2.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(2.dp)
             ) {
                 Text(
                     text = textViewMsg.value
@@ -59,7 +66,14 @@ class MainActivity : ComponentActivity() {
                 Button(
                     onClick = { init() }
                 ) {
-                    Text("测试")
+                    Text("js 测试")
+                }
+                Button(
+                    onClick = {
+                        textViewMsg.value = ""
+                    }
+                ) {
+                    Text("clean")
                 }
             }
         }
