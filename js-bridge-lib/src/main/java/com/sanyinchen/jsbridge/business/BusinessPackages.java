@@ -1,9 +1,10 @@
-package com.sanyinchen.jsbridge.business.nativemodule;
+package com.sanyinchen.jsbridge.business;
 
 
 import androidx.annotation.NonNull;
 
 import com.sanyinchen.jsbridge.JsBridgeContext;
+import com.sanyinchen.jsbridge.business.nativemodule.LogModule;
 import com.sanyinchen.jsbridge.module.bridge.NativeModelPackage;
 import com.sanyinchen.jsbridge.module.bridge.NativeModule;
 import com.sanyinchen.jsbridge.module.impl.cxx.CxxModuleWrapper;
@@ -11,11 +12,11 @@ import com.sanyinchen.jsbridge.module.impl.cxx.CxxModuleWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NativeBusinessPackages implements NativeModelPackage {
+public class BusinessPackages implements NativeModelPackage {
 
     private LogModule.LogUpdate runnable;
 
-    public NativeBusinessPackages(LogModule.LogUpdate runnable) {
+    public BusinessPackages(LogModule.LogUpdate runnable) {
         this.runnable = runnable;
     }
 

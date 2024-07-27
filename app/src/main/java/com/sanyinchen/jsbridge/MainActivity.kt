@@ -17,7 +17,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.facebook.soloader.SoLoader
-import com.sanyinchen.jsbridge.business.nativemodule.NativeBusinessPackages
+import com.sanyinchen.jsbridge.business.BusinessPackages
+import com.sanyinchen.jsbridge.business.jsmodule.HelloJavaScriptModule
 import com.sanyinchen.jsbridge.ui.theme.MainLayoutTheme
 
 
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
             .setApplication(application)
             .setBundleAssetName("js-bridge-bundle.js")
             .setNativeModuleCallExceptionHandler { e -> e.printStackTrace() }
-            .addPackage(NativeBusinessPackages() {
+            .addPackage(BusinessPackages() {
                 mainHandle.post {
                     textViewMsg.value += "\n $it"
                 }
@@ -67,6 +68,17 @@ class MainActivity : ComponentActivity() {
                     onClick = { init() }
                 ) {
                     Text("js 测试")
+                }
+                Button(
+                    onClick = {
+                        val helloJavaScriptModule =
+                            jsBridgeInstanceManager?.currentReactContext?.getJSModule(
+                                HelloJavaScriptModule::class.java
+                            )
+                        helloJavaScriptModule?.showMessage("test")
+                    }
+                ) {
+                    Text("invoke js ")
                 }
                 Button(
                     onClick = {

@@ -8,6 +8,8 @@
 
 import NativeModules from "./BatchedBridge/NativeModules"
 
+const BatchedBridge = require('./BatchedBridge/BatchedBridge');
+
 global.NativeLog = NativeModules.NativeLog;
 NativeLog.log("hello world ! from js test");
 
@@ -20,3 +22,4 @@ global.HelloJavaScriptModule = {
         NativeModules.NativeLog.log(message);
     }
 };
+BatchedBridge.registerCallableModule('HelloJavaScriptModule', global.HelloJavaScriptModule)
