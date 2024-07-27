@@ -1,10 +1,9 @@
-package com.sanyinchen.jsbridge.module;
+package com.sanyinchen.jsbridge.business.nativemodule;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.sanyinchen.jsbridge.JsBridgeContext;
 import com.sanyinchen.jsbridge.annotation.ReactMethod;
 import com.sanyinchen.jsbridge.module.impl.java.BaseJavaModule;
 

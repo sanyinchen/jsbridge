@@ -158,6 +158,11 @@ public class JsBridgeManager {
         recreateReactContextInBackgroundInner();
     }
 
+    @Nullable
+    public JsBridgeContext getCurrentReactContext() {
+        return mCurrentReactContext;
+    }
+
     @ThreadConfined(UI)
     private void recreateReactContextInBackgroundInner() {
         recreateReactContextInBackgroundFromBundleLoader();

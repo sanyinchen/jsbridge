@@ -51,7 +51,7 @@ class JThrowable;
 
 class JCppException : public JavaClass<JCppException, JThrowable> {
  public:
-  static auto constexpr kJavaDescriptor = "Lcom/facebook/jni/CppException;";
+  static auto constexpr kJavaDescriptor = "Lcom/sanyinchen/jsbridge/exception/CppException;";
 
   static local_ref<JCppException> create(const char* str) {
     return newInstance(make_jstring(str));

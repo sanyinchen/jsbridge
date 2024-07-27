@@ -1,4 +1,4 @@
-package com.sanyinchen.jsbridge.module;
+package com.sanyinchen.jsbridge.business.nativemodule;
 
 
 import androidx.annotation.NonNull;
@@ -6,16 +6,16 @@ import androidx.annotation.NonNull;
 import com.sanyinchen.jsbridge.JsBridgeContext;
 import com.sanyinchen.jsbridge.module.bridge.NativeModelPackage;
 import com.sanyinchen.jsbridge.module.bridge.NativeModule;
+import com.sanyinchen.jsbridge.module.impl.cxx.CxxModuleWrapper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class BusinessPackages implements NativeModelPackage {
+public class NativeBusinessPackages implements NativeModelPackage {
 
     private LogModule.LogUpdate runnable;
 
-    public BusinessPackages(LogModule.LogUpdate runnable) {
+    public NativeBusinessPackages(LogModule.LogUpdate runnable) {
         this.runnable = runnable;
     }
 
@@ -25,6 +25,7 @@ public class BusinessPackages implements NativeModelPackage {
     public List<NativeModule> createNativeModules(@NonNull JsBridgeContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
         modules.add(new LogModule(runnable));
-        return Collections.emptyList();
+        modules.add(CxxModuleWrapper.makeDso("cxxmodule", "createHelloCxxModule"));
+        return modules;
     }
 }

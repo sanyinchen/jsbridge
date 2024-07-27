@@ -24,7 +24,6 @@ import com.sanyinchen.jsbridge.lifecycle.ActivityEventListener;
 import com.sanyinchen.jsbridge.lifecycle.LifecycleEventListener;
 import com.sanyinchen.jsbridge.lifecycle.LifecycleState;
 import com.sanyinchen.jsbridge.module.bridge.NativeModule;
-import com.sanyinchen.jsbridge.module.js.JavaScriptModule;
 import com.sanyinchen.jsbridge.queue.MessageQueueThread;
 import com.sanyinchen.jsbridge.queue.ReactQueueConfiguration;
 import com.sanyinchen.jsbridge.utils.UiThreadUtil;
@@ -118,15 +117,6 @@ public class JsBridgeContext extends ContextWrapper {
         return getBaseContext().getSystemService(name);
     }
 
-    /**
-     * @return handle to the specified JS module for the CatalystInstance associated with this Context
-     */
-    public <T extends JavaScriptModule> T getJSModule(Class<T> jsInterface) {
-        if (mCatalystInstance == null) {
-            throw new RuntimeException(EARLY_JS_ACCESS_EXCEPTION_MESSAGE);
-        }
-        return mCatalystInstance.getJSModule(jsInterface);
-    }
 
     public LifecycleState getLifecycleState() {
         return mLifecycleState;

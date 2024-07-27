@@ -43,8 +43,8 @@ namespace facebook {
             class JInstanceCallback : public InstanceCallback {
             public:
                 explicit JInstanceCallback(
-                        alias_ref<ReactCallback::javaobject> jobj,
-                        std::shared_ptr<JMessageQueueThread> messageQueueThread)
+                        alias_ref <ReactCallback::javaobject> jobj,
+                        std::shared_ptr <JMessageQueueThread> messageQueueThread)
                         : jobj_(make_global(jobj)),
                           messageQueueThread_(std::move(messageQueueThread)) {}
 
@@ -77,14 +77,14 @@ namespace facebook {
                 }
 
             private:
-                global_ref<ReactCallback::javaobject> jobj_;
-                std::shared_ptr<JMessageQueueThread> messageQueueThread_;
+                global_ref <ReactCallback::javaobject> jobj_;
+                std::shared_ptr <JMessageQueueThread> messageQueueThread_;
             };
 
         }
 
-        jni::local_ref<JsBridgeInstanceImpl::jhybriddata> JsBridgeInstanceImpl::initHybrid(
-                jni::alias_ref<jclass>) {
+        jni::local_ref <JsBridgeInstanceImpl::jhybriddata> JsBridgeInstanceImpl::initHybrid(
+                jni::alias_ref <jclass>) {
             return makeCxxInstance();
         }
 
@@ -122,13 +122,13 @@ namespace facebook {
         }
 
         void JsBridgeInstanceImpl::initializeBridge(
-                jni::alias_ref<ReactCallback::javaobject> callback,
+                jni::alias_ref <ReactCallback::javaobject> callback,
                 // This executor is actually a factory holder.
                 JavaScriptExecutorHolder *jseh,
-                jni::alias_ref<JavaMessageQueueThread::javaobject> jsQueue,
-                jni::alias_ref<JavaMessageQueueThread::javaobject> nativeModulesQueue,
-                jni::alias_ref<jni::JCollection<JavaModuleWrapper::javaobject>::javaobject> javaModules,
-                jni::alias_ref<jni::JCollection<ModuleHolder::javaobject>::javaobject> cxxModules) {
+                jni::alias_ref <JavaMessageQueueThread::javaobject> jsQueue,
+                jni::alias_ref <JavaMessageQueueThread::javaobject> nativeModulesQueue,
+                jni::alias_ref <jni::JCollection<JavaModuleWrapper::javaobject>::javaobject> javaModules,
+                jni::alias_ref <jni::JCollection<ModuleHolder::javaobject>::javaobject> cxxModules) {
             // TODO mhorowitz: how to assert here?
             // Assertions.assertCondition(mBridge == null, "initializeBridge should be called once");
             moduleMessageQueue_ = std::make_shared<JMessageQueueThread>(nativeModulesQueue);
@@ -166,8 +166,8 @@ namespace facebook {
         }
 
         void JsBridgeInstanceImpl::extendNativeModules(
-                jni::alias_ref<jni::JCollection<JavaModuleWrapper::javaobject>::javaobject> javaModules,
-                jni::alias_ref<jni::JCollection<ModuleHolder::javaobject>::javaobject> cxxModules) {
+                jni::alias_ref <jni::JCollection<JavaModuleWrapper::javaobject>::javaobject> javaModules,
+                jni::alias_ref <jni::JCollection<ModuleHolder::javaobject>::javaobject> cxxModules) {
             moduleRegistry_->registerModules(buildNativeModuleList(
                     std::weak_ptr<Instance>(instance_),
                     javaModules,
@@ -175,16 +175,9 @@ namespace facebook {
                     moduleMessageQueue_));
         }
 
-        void JsBridgeInstanceImpl::jniSetSourceURL(const std::string &sourceURL) {
-            instance_->setSourceURL(sourceURL);
-        }
-
-        void JsBridgeInstanceImpl::jniRegisterSegment(int segmentId, const std::string &path) {
-            instance_->registerBundle((uint32_t) segmentId, path);
-        }
 
         void JsBridgeInstanceImpl::jniLoadScriptFromAssets(
-                jni::alias_ref<JAssetManager::javaobject> assetManager,
+                jni::alias_ref <JAssetManager::javaobject> assetManager,
                 const std::string &assetURL,
                 bool loadSynchronously) {
             const int kAssetsLength = 9;  // strlen("assets://");
@@ -205,20 +198,6 @@ namespace facebook {
             }
         }
 
-        void JsBridgeInstanceImpl::jniLoadScriptFromFile(const std::string &fileName,
-                                                         const std::string &sourceURL,
-                                                         bool loadSynchronously) {
-            if (Instance::isIndexedRAMBundle(fileName.c_str())) {
-                instance_->loadRAMBundleFromFile(fileName, sourceURL, loadSynchronously);
-            } else {
-                std::unique_ptr<const JSBigFileString> script;
-                RecoverableError::runRethrowingAsRecoverable<std::system_error>(
-                        [&fileName, &script]() {
-                            script = JSBigFileString::fromPath(fileName);
-                        });
-                instance_->loadScriptFromString(std::move(script), sourceURL, loadSynchronously);
-            }
-        }
 
         void JsBridgeInstanceImpl::jniCallJSFunction(std::string module, std::string method,
                                                      NativeArray *arguments) {
@@ -248,7 +227,8 @@ namespace facebook {
         }
 
         jlong JsBridgeInstanceImpl::getJavaScriptContext() {
-            return (jlong) (intptr_t) instance_->getJavaScriptContext();
+            return (jlong)(intptr_t)
+            instance_->getJavaScriptContext();
         }
 
         void JsBridgeInstanceImpl::handleMemoryPressure(int pressureLevel) {

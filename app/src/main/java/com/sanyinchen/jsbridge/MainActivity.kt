@@ -11,17 +11,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.facebook.soloader.SoLoader
-import com.sanyinchen.jsbridge.module.BusinessPackages
+import com.sanyinchen.jsbridge.business.nativemodule.NativeBusinessPackages
 import com.sanyinchen.jsbridge.ui.theme.MainLayoutTheme
-import com.sanyinchen.jsbridge.utils.UiThreadUtil
+
 
 class MainActivity : ComponentActivity() {
     val mainHandle = Handler(Looper.getMainLooper())
     val textViewMsg = mutableStateOf("Hello, World!")
+    var jsBridgeInstanceManager: JsBridgeManager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SoLoader.init(this, false)
@@ -32,17 +32,19 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun init() {
-        val jsBridgeInstanceManager = JsBridgeManagerBuilder()
+
+        jsBridgeInstanceManager = JsBridgeManagerBuilder()
             .setApplication(application)
             .setBundleAssetName("js-bridge-bundle.js")
             .setNativeModuleCallExceptionHandler { e -> e.printStackTrace() }
-            .addPackage(BusinessPackages() {
+            .addPackage(NativeBusinessPackages() {
                 mainHandle.post {
-                    textViewMsg.value = "data from $it"
+                    textViewMsg.value += "\n $it"
                 }
             })
             .build()
-        jsBridgeInstanceManager.run()
+        jsBridgeInstanceManager?.run()
+
     }
 
     @Composable

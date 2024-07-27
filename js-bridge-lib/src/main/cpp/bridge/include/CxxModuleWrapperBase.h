@@ -27,7 +27,7 @@ class CxxModuleWrapperBase
   : public jni::HybridClass<CxxModuleWrapperBase, JNativeModule> {
 public:
   constexpr static const char *const kJavaDescriptor =
-    "Lcom/sanyinchen/jsbridge/message/CxxModuleWrapperBase;";
+    "Lcom/sanyinchen/jsbridge/module/impl/cxx/CxxModuleWrapperBase;";
 
   static void registerNatives() {
     registerHybrid({

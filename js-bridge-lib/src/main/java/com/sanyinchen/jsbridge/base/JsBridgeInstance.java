@@ -17,7 +17,6 @@ import com.sanyinchen.jsbridge.load.JSBundleLoaderDelegate;
 import com.sanyinchen.jsbridge.memory.MemoryPressureListener;
 import com.sanyinchen.jsbridge.module.bridge.NativeModuleRegistry;
 import com.sanyinchen.jsbridge.module.bridge.NativeModule;
-import com.sanyinchen.jsbridge.module.js.JavaScriptModule;
 import com.sanyinchen.jsbridge.module.jsi.JSIModule;
 import com.sanyinchen.jsbridge.module.jsi.JSIModuleSpec;
 import com.sanyinchen.jsbridge.queue.ReactQueueConfiguration;
@@ -76,8 +75,6 @@ public interface JsBridgeInstance
     void initialize();
 
     ReactQueueConfiguration getReactQueueConfiguration();
-
-    <T extends JavaScriptModule> T getJSModule(Class<T> jsInterface);
 
     <T extends NativeModule> boolean hasNativeModule(Class<T> nativeModuleInterface);
 

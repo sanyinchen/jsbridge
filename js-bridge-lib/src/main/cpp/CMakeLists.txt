@@ -72,6 +72,7 @@ include_directories(jscexecutor)
 include_directories(bridge/include)
 include_directories(jsc)
 
+add_subdirectory(cxxmodule)
 add_subdirectory(jsc)
 add_subdirectory(jscexecutor)
 add_subdirectory(boost)
