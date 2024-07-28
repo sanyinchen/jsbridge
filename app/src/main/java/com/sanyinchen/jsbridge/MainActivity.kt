@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 Button(
                     onClick = { init() }
                 ) {
-                    Text("js 测试")
+                    Text("init ")
                 }
                 Button(
                     onClick = {

@@ -53,10 +53,6 @@ public class JsBridgeContext extends ContextWrapper {
     private @Nullable
     JsBridgeInstance mCatalystInstance;
     private @Nullable
-    LayoutInflater mInflater;
-    private @Nullable
-    MessageQueueThread mUiMessageQueueThread;
-    private @Nullable
     MessageQueueThread mNativeModulesMessageQueueThread;
     private @Nullable
     MessageQueueThread mJSMessageQueueThread;
@@ -84,7 +80,6 @@ public class JsBridgeContext extends ContextWrapper {
         mCatalystInstance = catalystInstance;
 
         ReactQueueConfiguration queueConfig = catalystInstance.getReactQueueConfiguration();
-        mUiMessageQueueThread = queueConfig.getUIQueueThread();
         mNativeModulesMessageQueueThread = queueConfig.getNativeModulesQueueThread();
         mJSMessageQueueThread = queueConfig.getJSQueueThread();
     }
@@ -109,12 +104,6 @@ public class JsBridgeContext extends ContextWrapper {
     // TODO: T7538796 Check requirement for Override of getSystemService ReactContext
     @Override
     public Object getSystemService(String name) {
-        if (LAYOUT_INFLATER_SERVICE.equals(name)) {
-            if (mInflater == null) {
-                mInflater = LayoutInflater.from(getBaseContext()).cloneInContext(this);
-            }
-            return mInflater;
-        }
         return getBaseContext().getSystemService(name);
     }
 
@@ -248,18 +237,6 @@ public class JsBridgeContext extends ContextWrapper {
                 handleException(e);
             }
         }
-    }
-
-    public void assertOnUiQueueThread() {
-        Assertions.assertNotNull(mUiMessageQueueThread).assertIsOnThread();
-    }
-
-    public boolean isOnUiQueueThread() {
-        return Assertions.assertNotNull(mUiMessageQueueThread).isOnThread();
-    }
-
-    public void runOnUiQueueThread(Runnable runnable) {
-        Assertions.assertNotNull(mUiMessageQueueThread).runOnQueue(runnable);
     }
 
     public void assertOnNativeModulesQueueThread() {
