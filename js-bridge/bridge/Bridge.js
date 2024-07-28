@@ -11,9 +11,10 @@
 'use strict';
 
 
-const MessageQueue = require('./MessageQueue');
+global.__DEV__ = true
 
-const BatchedBridge = new MessageQueue();
+const MessageQueue = require('./MessageQueue');
+const Bridge = new MessageQueue();
 
 // Wire up the batched bridge on the global object so that we can call into it.
 // Ideally, this would be the inverse relationship. I.e. the native environment
@@ -23,7 +24,7 @@ const BatchedBridge = new MessageQueue();
 
 Object.defineProperty(global, '__fbBatchedBridge', {
     configurable: true,
-    value: BatchedBridge,
+    value: Bridge,
 });
 
-module.exports = BatchedBridge;
+module.exports = Bridge

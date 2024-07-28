@@ -6,9 +6,14 @@
  * @since 19-11-24
  */
 
-import NativeModules from "./BatchedBridge/NativeModules"
-
-const BatchedBridge = require('./BatchedBridge/BatchedBridge');
+const Bridge = require('./bridge/Bridge');
+const NativeModules = require('./bridge/NativeModules')
+global.HelloJavaScriptModule = {
+    showMessage: (message) => {
+        NativeModules.NativeLog.log('from HelloJavaScriptModule:' + message);
+    }
+};
+Bridge.registerCallableModule('HelloJavaScriptModule', global.HelloJavaScriptModule)
 
 global.NativeLog = NativeModules.NativeLog;
 NativeLog.log("hello world ! from js test");
@@ -16,10 +21,3 @@ NativeLog.log("hello world ! from js test");
 NativeModules.HelloCxxModule.foo((r) => {
     NativeModules.NativeLog.log(r);
 });
-
-global.HelloJavaScriptModule = {
-    showMessage: (message) => {
-        NativeModules.NativeLog.log(message);
-    }
-};
-BatchedBridge.registerCallableModule('HelloJavaScriptModule', global.HelloJavaScriptModule)

@@ -11,11 +11,10 @@
 'use strict';
 
 const ErrorUtils = require('../polyfills/error-guard');
-const Systrace = require('../Performance/Systrace');
-
-// const deepFreezeAndThrowOnMutationInDev = require('deepFreezeAndThrowOnMutationInDev');
+const Systrace = require('../performance/Systrace');
 const invariant = require('invariant');
 const stringifySafe = require('../polyfills/stringifySafe');
+
 
 
 export type SpyData = {

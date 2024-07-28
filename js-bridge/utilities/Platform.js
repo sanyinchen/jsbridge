@@ -10,7 +10,7 @@
 
 'use strict';
 
-const NativeModules = require('../BatchedBridge/NativeModules');
+const NativeModules = require('../bridge/NativeModules');
 
 export type PlatformSelectSpec<A, D> = {
   android?: A,
