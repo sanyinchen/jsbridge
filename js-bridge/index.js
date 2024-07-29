@@ -10,6 +10,7 @@ const Bridge = require('./bridge/Bridge');
 const NativeModules = require('./bridge/NativeModules')
 
 // test
+// async invoke NativeModule:TestSum
 NativeModules.TestSum.sum(1, 2)
     .then(result => {
         NAConsole.log("TestSum.sum(1, 2) test:" + result);
@@ -18,6 +19,7 @@ NativeModules.TestSum.sum(1, 2)
         NAConsole.log("Error" + error);
     });
 
+// Js HelloJavaScriptModule define
 global.HelloJavaScriptModule = {
     showMessage: (message) => {
         NativeModules.NativeLog.log('HelloJavaScriptModule:showMessage:' + message);
@@ -25,7 +27,9 @@ global.HelloJavaScriptModule = {
 };
 Bridge.registerCallableModule('HelloJavaScriptModule', global.HelloJavaScriptModule)
 
+// NALog NativeModule test
 NAConsole.log("Js bridge inited");
+// NativeModule c++ module invoke test
 NativeModules.HelloCxxModule.foo((r) => {
     NAConsole.log("js HelloCxxModule invoke test:" + r);
 });
