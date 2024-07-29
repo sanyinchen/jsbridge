@@ -12,7 +12,7 @@ std::string HelloCxxModule::getName() {
 auto HelloCxxModule::getMethods() -> std::vector<Method> {
     return {
             Method("foo", [](folly::dynamic args, Callback cb) {
-                cb({"==========> foo msg from cxx callback"});
+                cb({"receive HelloCxxModule invoked"});
                 LOG(INFO) << "<<<<<<<<<src_test get foo callback";
             })
 
