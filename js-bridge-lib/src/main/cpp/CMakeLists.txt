@@ -56,7 +56,7 @@ add_compile_options(
         -fexceptions
         -frtti
         -ffunction-sections
-        -O0
+        -O0 # jus for debug
 )
 
 
