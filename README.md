@@ -1,4 +1,4 @@
-### 基于RNV0.6x版本的JS-Bridge通讯框架
+### 基于RNV0.6x版本JS-Bridge通讯框架
 #### 目录： 
 + js-bridge：JS Bridge
 + js-bridge-lib: Native Bridge
