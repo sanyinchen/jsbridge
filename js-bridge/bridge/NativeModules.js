@@ -188,4 +188,5 @@ if (global.nativeModuleProxy) {
     );
 }
 
+global.NAConsole = NativeModules.NativeLog;
 module.exports = NativeModules;
